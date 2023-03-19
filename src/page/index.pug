@@ -6,9 +6,17 @@ html(lang="en")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     title MatXessIDE
     link(rel="shortcut icon", href="./sql_icon.png", type="image/png")
+    script(src="./main.ts", type="text/javascript") 
+    link(rel="stylesheet", href="./style.scss")
   body 
     h2
       img(src="./sql_icon.png", style="width:80px;height:80px;")
       span Mat Xess IDE
 
-    textarea(name="yourIDE", cols="30", rows="10") 
+    div#matXessIDE 
+
+    script(src="../../node_modules/monaco-editor/min/vs/loader.js")
+    script.
+      require.config({ paths: { vs: '../../node_modules/monaco-editor/min/vs' } });
+      
+      require(['vs/editor/editor.main'], mainController);
