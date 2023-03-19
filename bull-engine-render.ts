@@ -1,9 +1,5 @@
-import * as fs from "fs";
 import * as path from "path";
 import { BullEngine } from "@nmhillusion/n2ngin-bull-engine";
-import { ModuleKind, ModuleResolutionKind, ScriptTarget } from "typescript";
-
-console.log("file: " + fs.readdirSync(".").toString());
 
 async function main() {
   const promise_ = await new BullEngine()
@@ -12,12 +8,12 @@ async function main() {
       outDir: path.join(__dirname, "./dist"),
       pug: {
         enabled: true,
+        config: {
+          pretty: true,
+        },
       },
       copyResource: {
         enabled: true,
-        config: {
-          extsToCopy: ["html", "js", "png"],
-        },
       },
       scss: {
         enabled: true,
