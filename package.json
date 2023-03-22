@@ -4,7 +4,10 @@
   "description": "this is an example app for ide",
   "main": "dist/backend/main.js",
   "scripts": {
+    "setupEnv": "ts-node ./setupEnv/buildMatXessQuerier",
     "render": "ts-node bull-engine-render.ts",
+    "postinstall": "npm run setupEnv",
+    "// main script": "============================================",
     "start": "tsc && npm run render && electron .",
     "prepare-build": "electron-forge import",
     "build": "electron-forge make",

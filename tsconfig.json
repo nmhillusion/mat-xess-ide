@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "sourceMap": true,
-    "rootDir": "src/backend",
+    "rootDir": ".",
     "sourceRoot": "src/backend",
     "alwaysStrict": true,
     "declaration": true,

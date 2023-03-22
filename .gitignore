@@ -4,3 +4,4 @@ dist/
 *.log
 out.data.json
 externalLib/*.jar
+temp_repo
