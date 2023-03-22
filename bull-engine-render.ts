@@ -4,8 +4,8 @@ import { BullEngine } from "@nmhillusion/n2ngin-bull-engine";
 async function main() {
   const promise_ = await new BullEngine()
     .config({
-      rootDir: path.join(__dirname, "./src"),
-      outDir: path.join(__dirname, "./dist"),
+      rootDir: path.join(__dirname, "./src/frontend"),
+      outDir: path.join(__dirname, "./dist/frontend"),
       pug: {
         enabled: true,
         config: {

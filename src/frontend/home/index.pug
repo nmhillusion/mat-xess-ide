@@ -15,8 +15,8 @@ html(lang="en")
 
     div#matXessIDE 
 
-    script(src="../../node_modules/monaco-editor/min/vs/loader.js")
+    script(src="../../../node_modules/monaco-editor/min/vs/loader.js")
     script.
-      require.config({ paths: { vs: '../../node_modules/monaco-editor/min/vs' } });
+      require.config({ paths: { vs: '../../../node_modules/monaco-editor/min/vs' } });
       
       require(['vs/editor/editor.main'], mainController);

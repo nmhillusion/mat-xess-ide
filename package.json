@@ -2,10 +2,10 @@
   "name": "mat-xess-ide",
   "version": "1.0.0",
   "description": "this is an example app for ide",
-  "main": "dist/main.js",
+  "main": "dist/backend/main.js",
   "scripts": {
     "render": "ts-node bull-engine-render.ts",
-    "start": "npm run render && electron .",
+    "start": "tsc && npm run render && electron .",
     "prepare-build": "electron-forge import",
     "build": "electron-forge make",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -20,7 +20,8 @@
     "@electron-forge/maker-squirrel": "^6.0.5",
     "@electron-forge/maker-zip": "^6.0.5",
     "@nmhillusion/n2ngin-bull-engine": "^2023.319.2",
-    "electron": "^23.1.4",
+    "@types/electron": "^1.6.10",
+    "electron": "23.1.4",
     "path": "^0.12.7",
     "ts-node": "^10.9.1",
     "typescript": "^5.0.2"

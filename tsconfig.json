@@ -1,15 +1,16 @@
 {
   "compilerOptions": {
     "sourceMap": true,
-    "target": "ES2022",
-    "sourceRoot": "src",
+    "rootDir": "src/backend",
+    "sourceRoot": "src/backend",
     "alwaysStrict": true,
     "declaration": true,
     "module": "CommonJS",
-    "outDir": "dist",
+    "outDir": "dist/backend",
     "pretty": true,
     "esModuleInterop": true,
     "moduleResolution": "node"
   },
+  "include": ["src/backend/**/*.ts"],
   "exclude": ["node_modules/**/*"]
 }
