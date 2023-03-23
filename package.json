@@ -4,7 +4,7 @@
   "description": "this is an example app for ide",
   "main": "dist/backend/main.js",
   "scripts": {
-    "setupEnv": "ts-node ./setupEnv/buildMatXessQuerier",
+    "setupEnv": "ts-node ./setupEnv/main",
     "render": "ts-node bull-engine-render.ts",
     "postinstall": "npm run setupEnv",
     "// main script": "============================================",
