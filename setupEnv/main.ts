@@ -4,3 +4,5 @@ import { __exec__ as execCheckRequiredEnvCommands } from "./checkRequiredEnvComm
 if (execCheckRequiredEnvCommands()) {
   execBuildMatXessQuerier();
 }
+
+console.log("<< FINISH SETUP ENV");
