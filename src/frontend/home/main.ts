@@ -23,3 +23,7 @@ function mainController() {
 function getValue() {
   return editor?.getValue();
 }
+
+function callToServer() {
+  console.log("call to server...");
+}

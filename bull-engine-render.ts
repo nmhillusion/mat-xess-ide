@@ -23,6 +23,11 @@ async function main() {
       },
       typescript: {
         enabled: true,
+        config: {
+          sourceMap: true,
+          declaration: true,
+          declarationMap: true,
+        },
       },
       rewriteJavascript: {
         enabled: true,

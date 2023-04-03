@@ -1,10 +1,11 @@
 {
   "compilerOptions": {
     "sourceMap": true,
-    "rootDir": ".",
+    "rootDir": "src/backend",
     "sourceRoot": "src/backend",
     "alwaysStrict": true,
     "declaration": true,
+    "declarationMap": true,
     "module": "CommonJS",
     "outDir": "dist/backend",
     "pretty": true,
