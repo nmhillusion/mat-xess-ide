@@ -10,7 +10,7 @@ const createWindow = () => {
     height: 600,
     darkTheme: true,
     webPreferences: {
-      preload: path.join(__dirname, "preload.ts"),
+      preload: path.join(__dirname, "preload.js"),
     },
   });
 
@@ -41,9 +41,3 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
-
-const greetResp = String(greet().toString());
-
-console.log({ greetResp });
