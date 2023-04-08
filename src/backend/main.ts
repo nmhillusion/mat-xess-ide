@@ -1,43 +1,63 @@
 // Modules to control application life and create native browser window
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow, ipcMain, dialog } from "electron";
 import path from "path";
-import { greet } from "./callToJavaQuerier";
+import { ChannelType } from "./channel/base.channel";
+
+let mainWindow: BrowserWindow = null;
 
 const createWindow = () => {
-  // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     darkTheme: true,
     webPreferences: {
+      nodeIntegration: true,
       preload: path.join(__dirname, "preload.js"),
     },
   });
 
-  // and load the index.html of the app.
   mainWindow.loadFile(path.join(__dirname, "../frontend/home/index.html"));
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools();
 };
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   createWindow();
 
   app.on("activate", () => {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
+
+  handleChannels(app);
 });
 
-// Quit when all windows are closed, except on macOS. There, it's common
-// for applications and their menu bar to stay active until the user quits
-// explicitly with Cmd + Q.
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });
 
+function handleChannels(app: Electron.App) {
+  ipcMain.handle(ChannelType.QUERY_SQL, (evt, args) => {
+    console.log("main handle query sql on: ", args);
+
+    return {
+      result: "result query in here",
+    };
+  });
+
+  ipcMain.handle(ChannelType.SELECT_FILE, async (evt, args) => {
+    console.log("main handle select file");
+
+    const result = await dialog.showOpenDialog(mainWindow, {
+      title: "Select Ms Access Database",
+      filters: [
+        {
+          extensions: ["accdb"],
+          name: "MS Access File",
+        },
+      ],
+    });
+
+    return result.filePaths;
+  });
+}

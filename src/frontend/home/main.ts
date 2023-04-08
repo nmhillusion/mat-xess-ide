@@ -1,4 +1,6 @@
 /// <reference path="../../../node_modules/monaco-editor/monaco.d.ts" />
+/// <reference path="../types/window.d.ts" />
+/// <reference path="../types/require.d.ts" />
 
 let editor: monaco.editor.IStandaloneCodeEditor;
 
@@ -24,6 +26,20 @@ function getValue() {
   return editor?.getValue();
 }
 
-function callToServer() {
-  console.log("call to server...");
-}
+(function main() {
+  require.config({
+    paths: { vs: "../../../node_modules/monaco-editor/min/vs" },
+  });
+
+  require(["vs/editor/editor.main"], mainController);
+
+  const btnDatabase = document.querySelector(
+    "#database-file"
+  ) as HTMLButtonElement;
+
+  btnDatabase.onclick = async (_) => {
+    const selectedFile = await window.electronAPI.selectFile();
+
+    console.log({ selectedFile });
+  };
+})();
