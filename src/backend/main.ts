@@ -4,8 +4,12 @@ import path from "path";
 import { ChannelType } from "./channel/base.channel";
 import { AppStore, AppStoreKey } from "./store";
 import { doQueryDatabase } from "./callToJavaQuerier";
+import { envConfig } from "./environment";
 
+const testing = envConfig.processEnv.testing;
 let mainWindow: BrowserWindow = null;
+
+console.log({ testing });
 
 const createWindow = () => {
   mainWindow = new BrowserWindow({
@@ -19,7 +23,9 @@ const createWindow = () => {
     },
   });
 
-  mainWindow.removeMenu();
+  if (!testing) {
+    mainWindow.removeMenu();
+  }
 
   mainWindow.loadFile(path.join(__dirname, "../frontend/home/index.html"));
 
