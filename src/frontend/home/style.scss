@@ -66,6 +66,9 @@
   background-color: #eeeeee;
   padding: 0.5em;
   margin: 0;
+  width: 100vw;
+  box-sizing: border-box;
+  overflow: auto;
 
   .button-box {
     display: flex;
