@@ -21,12 +21,18 @@ export function doQueryDatabase(databasePath: string, query: string) {
     throw new Error("Empty query");
   }
 
+  const tmpQueryFile = path.resolve(__dirname, "~query.sql");
+
+  fs.writeFileSync(tmpQueryFile, query);
+
   execSync(
-    `cmd /c java -jar ./externalLib/MatXessQuerier.jar "${databasePath}" "${query}" "out.data.json" > app.log`,
+    `cmd /c java -jar ./externalLib/MatXessQuerier.jar "${databasePath}" "${tmpQueryFile}" "out.data.json" > app.log`,
     {
       encoding: "utf-8",
     }
   );
+
+  fs.unlinkSync(tmpQueryFile);
 
   return fs.readFileSync("out.data.json").toString();
 }
