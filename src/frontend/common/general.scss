@@ -1,0 +1,55 @@
+.btn {
+  border-radius: 0.15em;
+  padding: 0.4em 1.6em;
+  box-shadow: 0.1em 0.1em 0.3em #dddddd;
+  border: none;
+  margin: 0.1em;
+  cursor: pointer;
+
+  &.btn-primary {
+    color: #fff;
+    background-color: #359bed;
+  }
+
+  &.btn-secondary {
+    color: #fff;
+    background-color: rgb(235, 91, 199);
+  }
+
+  &.btn-warn {
+    color: #fff;
+    background-color: #ff9900;
+  }
+
+  &.btn-error {
+    color: #fff;
+    background-color: #f11;
+  }
+
+  &.btn-success {
+    color: #fff;
+    background-color: rgb(17, 255, 96);
+  }
+}
+
+.flex {
+  display: flex;
+}
+
+.align-right {
+  text-align: right;
+  justify-content: flex-end;
+}
+
+.align-center {
+  text-align: center;
+  justify-content: center;
+}
+
+code {
+  border: dashed 1px #999;
+  border-left-width: 2.5px;
+  padding: 1em;
+  padding-left: 1.5em;
+  display: block;
+}

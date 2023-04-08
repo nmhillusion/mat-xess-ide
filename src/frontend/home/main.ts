@@ -1,8 +1,16 @@
 /// <reference path="../../../node_modules/monaco-editor/monaco.d.ts" />
 /// <reference path="../types/window.d.ts" />
 /// <reference path="../types/require.d.ts" />
+/// <reference path="../types/ms-access-result.d.ts" />
 
 let editor: monaco.editor.IStandaloneCodeEditor;
+
+const STATE: {
+  executingQuery: boolean;
+  resultData?: MsAccessResult;
+} = {
+  executingQuery: false,
+};
 
 function mainController() {
   const matXessIdeEl = document.getElementById("matXessIDE");
@@ -17,22 +25,26 @@ function mainController() {
       where tu.id = 1
     `,
     language: "sql",
+    automaticLayout: true,
   });
 
   console.log({ editor });
 }
 
-function getValue() {
+function getQueryValue() {
   return editor?.getValue();
 }
 
 async function updateUI() {
+  updateConnectionStatus();
+  await updateResultPanel();
+  updateExecutionStatus();
+}
+
+async function updateConnectionStatus() {
   const connectionStatusEl = document.querySelector(
     "#connectedStatus"
   ) as HTMLDivElement;
-  const connectedDatabaseName = connectionStatusEl?.querySelector(
-    ".databaseName#databaseName"
-  );
 
   const selectedDatabase = await window.electronAPI.getAppStoreValue(
     "$SELECTED_DATABASE_"
@@ -42,6 +54,10 @@ async function updateUI() {
 
   if (connectionStatusEl) {
     if (selectedDatabase) {
+      const connectedDatabaseName = connectionStatusEl?.querySelector(
+        ".databaseName#databaseName"
+      );
+
       connectionStatusEl.style.display = "block";
 
       if (connectedDatabaseName) {
@@ -53,16 +69,80 @@ async function updateUI() {
   }
 }
 
-(function main() {
-  require.config({
-    paths: { vs: "../../../node_modules/monaco-editor/min/vs" },
-  });
+function clearChildrenEls(parentEl: Element) {
+  if (parentEl) {
+    while (parentEl.firstChild) {
+      parentEl.firstChild.remove();
+    }
+  }
+}
 
-  require(["vs/editor/editor.main"], mainController);
+function updateResultPanel() {
+  const resultPanel = document.querySelector(".result-panel") as HTMLDivElement;
+
+  if (!STATE.resultData || 0 == STATE.resultData?.tableData?.length) {
+    resultPanel.style.display = "none";
+  } else {
+    resultPanel.style.display = "block";
+
+    const resultContainer = resultPanel.querySelector(".result-container");
+    const columnNamesEl = resultContainer?.querySelector("#columnNames");
+    const tableDataEl = resultContainer?.querySelector("#tableData");
+
+    if (!columnNamesEl || !tableDataEl) {
+      throw new Error("Not found result elements");
+    }
+
+    clearChildrenEls(columnNamesEl);
+    clearChildrenEls(tableDataEl);
+
+    for (const columnName of STATE.resultData.columnNames) {
+      const columnNameTd = document.createElement("th");
+      columnNameTd.textContent = columnName;
+      columnNamesEl.appendChild(columnNameTd);
+    }
+
+    for (const row_ of STATE.resultData.tableData) {
+      const rowEl = document.createElement("tr");
+      for (const cell_ of row_) {
+        const cellEl = document.createElement("td");
+
+        cellEl.textContent = String(cell_);
+
+        rowEl.appendChild(cellEl);
+      }
+      tableDataEl.appendChild(rowEl);
+    }
+  }
+}
+
+function updateExecutionStatus() {
+  const btnExecQuery = document.querySelector(
+    "#execQuery"
+  ) as HTMLButtonElement;
+  const loadingSpinEl = document.querySelector("#loading") as HTMLElement;
+
+  if (STATE.executingQuery) {
+    btnExecQuery.style.display = "none";
+    loadingSpinEl.style.display = "block";
+  } else {
+    btnExecQuery.style.display = "block";
+    loadingSpinEl.style.display = "none";
+  }
+}
+
+(function main() {
+  {
+    require.config({
+      paths: { vs: "../../../node_modules/monaco-editor/min/vs" },
+    });
+
+    require(["vs/editor/editor.main"], mainController);
+  }
 
   {
     const btnDatabase = document.querySelector(
-      "#database-file"
+      "#btnSelectDatabase"
     ) as HTMLButtonElement;
 
     btnDatabase.onclick = async (_) => {
@@ -78,13 +158,20 @@ async function updateUI() {
     const btnExecQuery = document.querySelector(
       "#execQuery"
     ) as HTMLButtonElement;
-    btnExecQuery.onclick = (_) => {
-      const queryValue = getValue();
+    btnExecQuery.onclick = async (_) => {
+      STATE.executingQuery = true;
+      updateUI();
+
+      const queryValue = getQueryValue();
 
       console.log("will execute on ", queryValue);
 
-      const result = window.electronAPI.querySql(queryValue);
+      const result = await window.electronAPI.querySql(queryValue);
       console.log("result of query is: ", result);
+
+      STATE.resultData = result;
+      STATE.executingQuery = false;
+      updateUI();
     };
   }
 

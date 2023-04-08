@@ -15,6 +15,8 @@ contextBridge.exposeInMainWorld("electronAPI", {
 
     const result = await querySqlMessage.execute(ipcRenderer);
     console.log("result sql: ", result);
+
+    return result;
   },
   async selectFile() {
     console.log("do select file");

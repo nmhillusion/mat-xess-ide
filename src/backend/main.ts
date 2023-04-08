@@ -21,7 +21,7 @@ const createWindow = () => {
   mainWindow.loadFile(path.join(__dirname, "../frontend/home/index.html"));
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 };
 
 app.whenReady().then(() => {
@@ -57,12 +57,7 @@ function handleChannels(app: Electron.App, appStore: AppStore) {
 
     const [query_] = args;
 
-    return {
-      result: doQueryDatabase(
-        appStore.get(AppStoreKey.SELECTED_DATABASE),
-        query_
-      ),
-    };
+    return doQueryDatabase(appStore.get(AppStoreKey.SELECTED_DATABASE), query_);
   });
 
   ipcMain.handle(ChannelType.SELECT_FILE, async (evt, args) => {

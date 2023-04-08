@@ -6,21 +6,38 @@ html(lang="en")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     title MatXessIDE
     link(rel="shortcut icon", href="./sql_icon.png", type="image/png") 
+    link(rel="stylesheet", href="../common/general.scss")
+    link(rel="stylesheet", href="../common/reset.scss")
     link(rel="stylesheet", href="./style.scss")
   body 
-    h2
+    .banner
       img(src="./sql_icon.png", style="width:80px;height:80px;")
       span Mat Xess IDE
 
     .connection-form
-      button#database-file(type="button") Connect MS Access
-      blockquote#connectedStatus
+      .button-box.flex.align-right
+        button.btn.btn-secondary#btnSelectDatabase(type="button") Connect MS Access
+      
+      code#connectedStatus
         span.status Connected to 
         span#databaseName.databaseName
 
-    div#matXessIDE 
+    #matXessIDE 
     .button-box 
-      button#execQuery Exec
+      button.btn.btn-primary#execQuery Exec
+
+    #loading
+      .loading-element
+
+    .result-panel
+      .button-box 
+        button.btn.btn-success#exportExcel Export Excel
+
+      .result-container
+        table
+          thead
+            tr#columnNames
+          tbody#tableData
 
     script(src="../../../node_modules/monaco-editor/min/vs/loader.js")
     script(src="./main.ts", type="text/javascript")

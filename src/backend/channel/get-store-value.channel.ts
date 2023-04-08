@@ -1,6 +1,6 @@
 import { BaseChannel, ChannelType } from "./base.channel";
 
-export class GetStoreValueChannel extends BaseChannel {
+export class GetStoreValueChannel extends BaseChannel<string> {
   private storeKey: string;
 
   constructor() {

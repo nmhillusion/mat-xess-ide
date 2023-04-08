@@ -1,3 +1,5 @@
+/// <reference path="../frontend/types/ms-access-result.d.ts" />
+
 import path from "path";
 import * as fs from "fs";
 import { execSync } from "child_process";
@@ -12,7 +14,10 @@ export function greet() {
   );
 }
 
-export function doQueryDatabase(databasePath: string, query: string) {
+export function doQueryDatabase(
+  databasePath: string,
+  query: string
+): MsAccessResult {
   if (!databasePath) {
     throw new Error("Empty database path");
   }
@@ -25,14 +30,15 @@ export function doQueryDatabase(databasePath: string, query: string) {
 
   fs.writeFileSync(tmpQueryFile, query);
 
-  execSync(
-    `cmd /c java -jar ./externalLib/MatXessQuerier.jar "${databasePath}" "${tmpQueryFile}" "out.data.json" > app.log`,
-    {
-      encoding: "utf-8",
-    }
-  );
+  const command_ = `cmd /c java -jar ./externalLib/MatXessQuerier.jar "${databasePath}" "${tmpQueryFile}" "out.data.json" > app.log`;
+
+  console.log("command to exec query... ", command_);
+
+  execSync(command_, {
+    encoding: "utf-8",
+  });
 
   fs.unlinkSync(tmpQueryFile);
 
-  return fs.readFileSync("out.data.json").toString();
+  return JSON.parse(fs.readFileSync("out.data.json").toString());
 }

@@ -1,6 +1,8 @@
+/// <reference path="../../frontend/types/ms-access-result.d.ts" />
+
 import { BaseChannel, ChannelType } from "./base.channel";
 
-export class QuerySqlChannel extends BaseChannel {
+export class QuerySqlChannel extends BaseChannel<MsAccessResult> {
   private sql: string;
 
   constructor() {
