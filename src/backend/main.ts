@@ -3,8 +3,9 @@ import { app, BrowserWindow, ipcMain, dialog } from "electron";
 import path from "path";
 import { ChannelType } from "./channel/base.channel";
 import { AppStore, AppStoreKey } from "./store";
-import { doQueryDatabase } from "./callToJavaQuerier";
+import { doQueryDatabase } from "./service/msaccess-querier.service";
 import { envConfig } from "./environment";
+import { ExcelService } from "./service/excel.service";
 
 const testing = envConfig.processEnv.testing;
 let mainWindow: BrowserWindow = null;
@@ -66,7 +67,14 @@ function handleChannels(app: Electron.App, appStore: AppStore) {
 
     const [query_] = args;
 
-    return doQueryDatabase(appStore.get(AppStoreKey.SELECTED_DATABASE), query_);
+    const msAccessResult = doQueryDatabase(
+      appStore.get(AppStoreKey.SELECTED_DATABASE),
+      query_
+    );
+
+    ExcelService.export(msAccessResult, path.resolve(__dirname, "test.xlsx"));
+
+    return msAccessResult;
   });
 
   ipcMain.handle(ChannelType.SELECT_FILE, async (evt, args) => {

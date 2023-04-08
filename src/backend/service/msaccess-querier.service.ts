@@ -1,4 +1,4 @@
-/// <reference path="../frontend/types/ms-access-result.d.ts" />
+/// <reference path="../../frontend/types/ms-access-result.d.ts" />
 
 import path from "path";
 import * as fs from "fs";
