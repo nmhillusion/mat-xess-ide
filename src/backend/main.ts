@@ -9,14 +9,17 @@ let mainWindow: BrowserWindow = null;
 
 const createWindow = () => {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1000,
+    height: 800,
     darkTheme: true,
+    backgroundColor: "#eeeeee",
     webPreferences: {
       nodeIntegration: true,
       preload: path.join(__dirname, "preload.js"),
     },
   });
+
+  mainWindow.removeMenu();
 
   mainWindow.loadFile(path.join(__dirname, "../frontend/home/index.html"));
 
