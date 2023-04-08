@@ -6,9 +6,11 @@
 let editor: monaco.editor.IStandaloneCodeEditor;
 
 const STATE: {
+  spentTime: number;
   executingQuery: boolean;
   resultData?: MsAccessResult;
 } = {
+  spentTime: 0,
   executingQuery: false,
 };
 
@@ -88,8 +90,9 @@ function updateResultPanel() {
     const resultContainer = resultPanel.querySelector(".result-container");
     const columnNamesEl = resultContainer?.querySelector("#columnNames");
     const tableDataEl = resultContainer?.querySelector("#tableData");
+    const spendTimeEl = resultPanel.querySelector(".spend-time");
 
-    if (!columnNamesEl || !tableDataEl) {
+    if (!columnNamesEl || !tableDataEl || !spendTimeEl) {
       throw new Error("Not found result elements");
     }
 
@@ -113,6 +116,8 @@ function updateResultPanel() {
       }
       tableDataEl.appendChild(rowEl);
     }
+
+    spendTimeEl.textContent = `Executed in ${STATE.spentTime / 1000} seconds`;
   }
 }
 
@@ -161,6 +166,7 @@ function updateExecutionStatus() {
     btnExecQuery.onclick = async (_) => {
       STATE.executingQuery = true;
       updateUI();
+      const startTime = new Date();
 
       const queryValue = getQueryValue();
 
@@ -171,6 +177,7 @@ function updateExecutionStatus() {
 
       STATE.resultData = result;
       STATE.executingQuery = false;
+      STATE.spentTime = new Date().getTime() - startTime.getTime();
       updateUI();
     };
   }
