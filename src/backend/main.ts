@@ -2,6 +2,8 @@
 import { app, BrowserWindow, ipcMain, dialog } from "electron";
 import path from "path";
 import { ChannelType } from "./channel/base.channel";
+import { AppStore, AppStoreKey } from "./store";
+import { doQueryDatabase } from "./callToJavaQuerier";
 
 let mainWindow: BrowserWindow = null;
 
@@ -29,19 +31,37 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 
-  handleChannels(app);
+  const appStore = new AppStore(app);
+  handleChannels(app, appStore);
 });
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });
 
-function handleChannels(app: Electron.App) {
-  ipcMain.handle(ChannelType.QUERY_SQL, (evt, args) => {
+function handleChannels(app: Electron.App, appStore: AppStore) {
+  ipcMain.handle(ChannelType.GET_STORE_VALUE, (evt, ...args) => {
+    console.log("main handle `get store value` on: ", args);
+
+    const [storeKey] = args;
+
+    const result = appStore.get(storeKey);
+
+    console.log(`get store value [${storeKey}] = ${result}`);
+
+    return result;
+  });
+
+  ipcMain.handle(ChannelType.QUERY_SQL, (evt, ...args) => {
     console.log("main handle query sql on: ", args);
 
+    const [query_] = args;
+
     return {
-      result: "result query in here",
+      result: doQueryDatabase(
+        appStore.get(AppStoreKey.SELECTED_DATABASE),
+        query_
+      ),
     };
   });
 
@@ -49,7 +69,7 @@ function handleChannels(app: Electron.App) {
     console.log("main handle select file");
 
     const result = await dialog.showOpenDialog(mainWindow, {
-      title: "Select Ms Access Database",
+      title: "Select MS Access Database",
       filters: [
         {
           extensions: ["accdb"],
@@ -57,6 +77,8 @@ function handleChannels(app: Electron.App) {
         },
       ],
     });
+
+    appStore.set(AppStoreKey.SELECTED_DATABASE, String(result.filePaths));
 
     return result.filePaths;
   });

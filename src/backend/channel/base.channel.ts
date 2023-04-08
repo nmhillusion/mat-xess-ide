@@ -1,6 +1,7 @@
 export enum ChannelType {
   QUERY_SQL = "__query-sql__",
   SELECT_FILE = "__select-file__",
+  GET_STORE_VALUE = "__get-store-value__",
 }
 
 export abstract class BaseChannel {

@@ -3,3 +3,13 @@
   height: 300px;
   border: 1px solid #ccc;
 }
+
+#connectedStatus {
+  font-family: monospace;
+
+  .databaseName {
+    color: #eee;
+    background-color: #333;
+    padding: 0.3em;
+  }
+}

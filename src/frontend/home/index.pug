@@ -14,8 +14,13 @@ html(lang="en")
 
     .connection-form
       button#database-file(type="button") Connect MS Access
+      blockquote#connectedStatus
+        span.status Connected to 
+        span#databaseName.databaseName
 
     div#matXessIDE 
+    .button-box 
+      button#execQuery Exec
 
     script(src="../../../node_modules/monaco-editor/min/vs/loader.js")
     script(src="./main.ts", type="text/javascript")
