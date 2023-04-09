@@ -1,4 +1,4 @@
 interface MsAccessResult {
   columnNames: string[];
-  tableData: [][];
+  tableData: unknown[][];
 }

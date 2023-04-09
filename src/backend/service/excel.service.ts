@@ -1,7 +1,7 @@
 import { Worksheet, Workbook } from "exceljs";
 
 export class ExcelService {
-  private static setForHeaders(ws_: Worksheet, columnNames: string[]) {
+  private static setForColumnNames(ws_: Worksheet, columnNames: string[]) {
     if (columnNames && Array.isArray(columnNames)) {
       const row_ = ws_.getRow(1);
 
@@ -13,7 +13,7 @@ export class ExcelService {
     }
   }
 
-  private static setForTableData(ws_: Worksheet, tableData: [][]) {
+  private static setForTableData(ws_: Worksheet, tableData: unknown[][]) {
     if (tableData && Array.isArray(tableData)) {
       for (let rowIdx = 0; rowIdx < tableData.length; ++rowIdx) {
         const rowData = tableData[rowIdx];
@@ -22,11 +22,15 @@ export class ExcelService {
     }
   }
 
-  static export(accResult: MsAccessResult, outputFilePath: string) {
+  static export(
+    accResult: MsAccessResult,
+    outputFilePath: string,
+    sheetName: string = "Sheet1"
+  ) {
     const wb_ = new Workbook();
-    const ws_: Worksheet = wb_.addWorksheet("Sheet1");
+    const ws_: Worksheet = wb_.addWorksheet(sheetName);
 
-    this.setForHeaders(ws_, accResult.columnNames);
+    this.setForColumnNames(ws_, accResult.columnNames);
     this.setForTableData(ws_, accResult.tableData);
 
     wb_.xlsx.writeFile(outputFilePath);
