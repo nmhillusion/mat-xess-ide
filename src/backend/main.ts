@@ -1,17 +1,14 @@
 // Modules to control application life and create native browser window
-import { app, BrowserWindow, ipcMain, dialog } from "electron";
+import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
 import { ChannelType } from "./channel/base.channel";
-import { AppStore, AppStoreKey } from "./store";
-import { doQueryDatabase } from "./service/msaccess-querier.service";
 import { envConfig } from "./environment";
-import { ExcelService } from "./service/excel.service";
 import { ChannelHandler } from "./channel-handler/channel.handler";
 
 const testing = envConfig.processEnv.testing;
 let mainWindow: BrowserWindow = null;
 
-console.log({ testing });
+console.log({ testing, e_: process.env.MODE });
 
 const createWindow = () => {
   mainWindow = new BrowserWindow({

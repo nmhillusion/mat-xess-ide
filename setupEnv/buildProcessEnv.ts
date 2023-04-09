@@ -4,10 +4,14 @@ import path from "path";
 (function __exec__() {
   console.log("build process environment ::");
 
+  const isDev = "PROD" != String(process.env.MODE).trim();
+
   {
     const sourceFilePath = path.resolve(
       __dirname,
-      "../environment/environment.ts"
+      isDev
+        ? "../environment/environment.ts"
+        : "../environment/environment.prod.ts"
     );
 
     const outputConfigFilePaths = [

@@ -9,7 +9,8 @@
     "postinstall": "npm run setupEnv",
     "build-process-env": "ts-node setupEnv/buildProcessEnv",
     "// main script": "============================================",
-    "start": "npm run build-process-env && tsc && npm run render && electron .",
+    "start": "set MODE=DEV && npm run build-process-env && tsc && npm run render && electron .",
+    "start-prod": "set MODE=PROD && npm run build-process-env && tsc && npm run render && electron .",
     "prepare-build": "electron-forge import",
     "build": "electron-forge make",
     "test": "echo \"Error: no test specified\" && exit 1"
