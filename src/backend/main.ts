@@ -6,6 +6,7 @@ import { AppStore, AppStoreKey } from "./store";
 import { doQueryDatabase } from "./service/msaccess-querier.service";
 import { envConfig } from "./environment";
 import { ExcelService } from "./service/excel.service";
+import { ChannelHandler } from "./channel-handler/channel.handler";
 
 const testing = envConfig.processEnv.testing;
 let mainWindow: BrowserWindow = null;
@@ -41,57 +42,27 @@ app.whenReady().then(() => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
   });
 
-  const appStore = new AppStore(app);
-  handleChannels(app, appStore);
+  handleChannels(app);
 });
 
 app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });
 
-function handleChannels(app: Electron.App, appStore: AppStore) {
-  ipcMain.handle(ChannelType.GET_STORE_VALUE, (evt, ...args) => {
-    console.log("main handle `get store value` on: ", args);
+function handleChannels(app: Electron.App) {
+  const handler = new ChannelHandler(app);
 
-    const [storeKey] = args;
+  ipcMain.handle(
+    ChannelType.GET_STORE_VALUE,
+    handler.HANDLER__GET_STORE_VALUE.bind(handler)
+  );
 
-    const result = appStore.get(storeKey);
+  ipcMain.handle(
+    ChannelType.QUERY_SQL,
+    handler.HANDLER__QUERY_SQL.bind(handler)
+  );
 
-    console.log(`get store value [${storeKey}] = ${result}`);
-
-    return result;
-  });
-
-  ipcMain.handle(ChannelType.QUERY_SQL, (evt, ...args) => {
-    console.log("main handle query sql on: ", args);
-
-    const [query_] = args;
-
-    const msAccessResult = doQueryDatabase(
-      appStore.get(AppStoreKey.SELECTED_DATABASE),
-      query_
-    );
-
-    ExcelService.export(msAccessResult, path.resolve(__dirname, "test.xlsx"));
-
-    return msAccessResult;
-  });
-
-  ipcMain.handle(ChannelType.SELECT_FILE, async (evt, args) => {
-    console.log("main handle select file");
-
-    const result = await dialog.showOpenDialog(mainWindow, {
-      title: "Select MS Access Database",
-      filters: [
-        {
-          extensions: ["accdb"],
-          name: "MS Access File",
-        },
-      ],
-    });
-
-    appStore.set(AppStoreKey.SELECTED_DATABASE, String(result.filePaths));
-
-    return result.filePaths;
-  });
+  ipcMain.handle(ChannelType.SELECT_FILE, (evt, ...params) =>
+    handler.HANDLER__SELECT_FILE(evt, mainWindow, ...params)
+  );
 }
