@@ -1,14 +1,16 @@
 import { dialog } from "electron";
-import path from "path";
-import { ExcelService } from "../service/excel.service";
 import { doQueryDatabase } from "../service/msaccess-querier.service";
 import { AppStore, AppStoreKey } from "../store";
+import { envConfig } from "../environment";
 
 export class ChannelHandler {
   private appStoreInstance: AppStore;
+  private readonly MAX_RECORDS: number;
 
   constructor(app: Electron.App) {
     this.appStoreInstance = new AppStore(app);
+
+    this.MAX_RECORDS = envConfig.processEnv.recordsOnView || 100;
   }
 
   HANDLER__GET_STORE_VALUE(
@@ -31,12 +33,19 @@ export class ChannelHandler {
 
     const [query_] = args;
 
+    const wrapperSql = `
+      select top ${this.MAX_RECORDS} *
+      from (
+        ${String(query_)}
+      )
+    `;
+
+    console.log("[handler] wrapper sql: ", wrapperSql);
+
     const msAccessResult = doQueryDatabase(
       this.appStoreInstance.get(AppStoreKey.SELECTED_DATABASE),
-      String(query_)
+      wrapperSql
     );
-
-    ExcelService.export(msAccessResult, path.resolve(__dirname, "test.xlsx"));
 
     return msAccessResult;
   }

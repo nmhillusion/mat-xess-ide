@@ -2,6 +2,9 @@
 /// <reference path="../types/window.d.ts" />
 /// <reference path="../types/require.d.ts" />
 /// <reference path="../types/ms-access-result.d.ts" />
+/// <reference path="../common/environment.model.ts" />
+
+import { envConfig } from "../common/environment";
 
 let editor: monaco.editor.IStandaloneCodeEditor;
 
@@ -117,7 +120,11 @@ function updateResultPanel() {
       tableDataEl.appendChild(rowEl);
     }
 
-    spendTimeEl.textContent = `Executed in ${STATE.spentTime / 1000} seconds`;
+    spendTimeEl.textContent = `Executed in ${
+      STATE.spentTime / 1000
+    } seconds. (Only fetch first ${
+      envConfig.processEnv.recordsOnView
+    } records)`;
   }
 }
 
