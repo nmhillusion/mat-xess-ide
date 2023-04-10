@@ -37,19 +37,24 @@
   }
 }
 
-#loading {
-  display: none;
-  position: relative;
+.execute-box {
+  display: block;
+  height: 2em;
 
-  .loading-element {
-    display: block;
-    width: 25px;
-    height: 3px;
-    border-radius: 5px;
-    background-color: #359bed;
-    position: absolute;
-    left: 0;
-    animation: loadingSpinAnim 0.87s ease-in-out infinite alternate;
+  #loading {
+    display: none;
+    position: relative;
+
+    .loading-element {
+      display: block;
+      width: 25px;
+      height: 3px;
+      border-radius: 5px;
+      background-color: #359bed;
+      position: absolute;
+      left: 0;
+      animation: loadingSpinAnim 0.87s ease-in-out infinite alternate;
+    }
   }
 }
 

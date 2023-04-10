@@ -2,34 +2,43 @@
   border-radius: 0.15em;
   padding: 0.4em 1.6em;
   box-shadow: 0.1em 0.1em 0.3em #dddddd;
-  border: none;
+  border: solid 1px #dddddd;
   margin: 0.1em;
+  background-color: #ffffff;
   cursor: pointer;
 
-  &.btn-primary {
-    color: #fff;
-    background-color: #359bed;
+  &:focus {
+    border: solid 1px #36f;
   }
 
-  &.btn-secondary {
-    color: #fff;
-    background-color: rgb(235, 91, 199);
+  &:active {
+    box-shadow: 0.1em 0.1em 0.5em #359bed;
   }
 
-  &.btn-warn {
-    color: #fff;
-    background-color: #ff9900;
-  }
+  // &.btn-primary {
+  //   color: #fff;
+  //   background-color: #359bed;
+  // }
 
-  &.btn-error {
-    color: #fff;
-    background-color: #f11;
-  }
+  // &.btn-secondary {
+  //   color: #fff;
+  //   background-color: rgb(235, 91, 199);
+  // }
 
-  &.btn-success {
-    color: #fff;
-    background-color: rgb(17, 255, 96);
-  }
+  // &.btn-warn {
+  //   color: #fff;
+  //   background-color: #ff9900;
+  // }
+
+  // &.btn-error {
+  //   color: #fff;
+  //   background-color: #f11;
+  // }
+
+  // &.btn-success {
+  //   color: #fff;
+  //   background-color: rgb(17, 255, 96);
+  // }
 }
 
 .flex {

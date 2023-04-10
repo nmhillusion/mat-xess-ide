@@ -1,9 +1,8 @@
 /// <reference path="./environment.model.ts" />
 
-
 export const envConfig: AppEnvironment = {
   processEnv: {
-    testing: true,
+    testing: false,
     recordsOnView: 100,
   },
   matXessQuerier: {
