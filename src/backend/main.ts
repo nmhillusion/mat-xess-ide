@@ -3,7 +3,7 @@ import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
 import { ChannelType } from "./channel/base.channel";
 import { envConfig } from "./environment";
-import { ChannelHandler } from "./channel-handler/channel.handler";
+import { ChannelDelegate } from "./channel-handler/channel.delegate";
 
 const testing = envConfig.processEnv.testing;
 let mainWindow: BrowserWindow = null;
@@ -47,19 +47,17 @@ app.on("window-all-closed", () => {
 });
 
 function handleChannels(app: Electron.App) {
-  const handler = new ChannelHandler(app);
+  const channelDelegate = new ChannelDelegate(app, mainWindow);
 
-  ipcMain.handle(
-    ChannelType.GET_STORE_VALUE,
-    handler.HANDLER__GET_STORE_VALUE.bind(handler)
+  ipcMain.handle(ChannelType.GET_STORE_VALUE, (evt, ...args) =>
+    channelDelegate.invoke(ChannelType.GET_STORE_VALUE).handler(evt, ...args)
   );
 
-  ipcMain.handle(
-    ChannelType.QUERY_SQL,
-    handler.HANDLER__QUERY_SQL.bind(handler)
+  ipcMain.handle(ChannelType.QUERY_SQL, (evt, ...args) =>
+    channelDelegate.invoke(ChannelType.QUERY_SQL).handler(evt, ...args)
   );
 
-  ipcMain.handle(ChannelType.SELECT_FILE, (evt, ...params) =>
-    handler.HANDLER__SELECT_FILE(evt, mainWindow, ...params)
+  ipcMain.handle(ChannelType.SELECT_FILE, (evt, ...args) =>
+    channelDelegate.invoke(ChannelType.SELECT_FILE).handler(evt, ...args)
   );
 }
