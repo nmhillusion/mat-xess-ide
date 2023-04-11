@@ -1,4 +1,4 @@
-interface AppEnvironment {
+export interface AppEnvironment {
   processEnv: {
     testing: boolean;
     recordsOnView: number;

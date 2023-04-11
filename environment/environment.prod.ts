@@ -1,4 +1,4 @@
-/// <reference path="./environment.model.ts" />
+import { AppEnvironment } from "./environment.model";
 
 export const envConfig: AppEnvironment = {
   processEnv: {
