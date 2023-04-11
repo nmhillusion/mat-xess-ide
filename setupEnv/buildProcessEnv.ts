@@ -15,8 +15,8 @@ import path from "path";
     );
 
     const outputConfigFilePaths = [
-      path.resolve(__dirname, "../src/backend/environment.ts"),
-      path.resolve(__dirname, "../src/frontend/common/environment.ts"),
+      path.resolve(__dirname, "../src/share/environment/environment.ts"),
+      path.resolve(__dirname, "../src/share/environment/environment.ts"),
     ];
     console.log({ sourceFilePath, outputConfigFilePaths });
 
@@ -32,8 +32,8 @@ import path from "path";
     );
 
     const outputConfigFilePaths = [
-      path.resolve(__dirname, "../src/backend/environment.model.ts"),
-      path.resolve(__dirname, "../src/frontend/common/environment.model.ts"),
+      path.resolve(__dirname, "../src/share/environment/environment.model.ts"),
+      path.resolve(__dirname, "../src/share/environment/environment.model.ts"),
     ];
     console.log({ sourceFilePath, outputConfigFilePaths });
 

@@ -2,8 +2,8 @@
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
 import { ChannelType } from "./share/channel/base.channel";
-import { envConfig } from "./environment";
 import { ChannelDelegate } from "./channel-handler/channel.delegate";
+import { envConfig } from "./share/environment/environment";
 
 const testing = envConfig.processEnv.testing;
 let mainWindow: BrowserWindow = null;

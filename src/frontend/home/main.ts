@@ -2,9 +2,9 @@
 /// <reference path="../types/window.d.ts" />
 /// <reference path="../types/require.d.ts" />
 /// <reference path="../common/share/types/ms-access-result.d.ts" />
-/// <reference path="../common/environment.model.ts" />
+/// <reference path="../common/share/environment/environment.model.ts" />
 
-import { envConfig } from "../common/environment";
+import { envConfig } from "../common/share/environment/environment";
 
 let editor: monaco.editor.IStandaloneCodeEditor;
 

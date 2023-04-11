@@ -7,10 +7,10 @@
     "setupEnv": "ts-node ./setupEnv/main",
     "render": "ts-node bull-engine-render.ts",
     "postinstall": "npm run setupEnv",
-    "copy-share": "ts-node ./setupEnv/copyShareFolder && ts-node setupEnv/buildProcessEnv",
+    "copy-share": "ts-node setupEnv/buildProcessEnv && ts-node ./setupEnv/copyShareFolder",
     "// main script": "============================================",
     "start": "set MODE=DEV && npm run copy-share && tsc && npm run render && electron .",
-    "start-prod": "set MODE=PROD && npm run build-process-env && tsc && npm run render && electron .",
+    "start-prod": "set MODE=PROD && npm run copy-share && tsc && npm run render && electron .",
     "prepare-build": "electron-forge import",
     "build": "electron-forge make",
     "test": "echo \"Error: no test specified\" && exit 1"

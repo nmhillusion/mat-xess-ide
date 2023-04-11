@@ -1,5 +1,5 @@
 import { AppStore } from "../store";
-import { envConfig } from "../environment";
+import { envConfig } from "../share/environment/environment";
 import { BrowserWindow } from "electron";
 
 export abstract class ChannelHandler {
