@@ -1,7 +1,7 @@
 /// <reference path="../../../node_modules/monaco-editor/monaco.d.ts" />
 /// <reference path="../types/window.d.ts" />
 /// <reference path="../types/require.d.ts" />
-/// <reference path="../types/ms-access-result.d.ts" />
+/// <reference path="../common/share/types/ms-access-result.d.ts" />
 /// <reference path="../common/environment.model.ts" />
 
 import { envConfig } from "../common/environment";

@@ -1,5 +1,5 @@
 import { BrowserWindow } from "electron";
-import { ChannelType } from "../channel/base.channel";
+import { ChannelType } from "../share/channel/base.channel";
 import { ChannelHandler } from "./channel.handler";
 import { GetStoreValueHandler } from "./get-store-value.handler";
 import { QuerySqlHandler } from "./query-sql.handler";

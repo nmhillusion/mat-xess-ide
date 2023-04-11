@@ -16,7 +16,7 @@ export class SelectFileHandler extends ChannelHandler {
       ],
     });
 
-    this.appStoreInstance.set(
+    ChannelHandler.appStoreInstance.set(
       AppStoreKey.SELECTED_DATABASE,
       String(result.filePaths)
     );

@@ -1,7 +1,7 @@
 // Modules to control application life and create native browser window
 import { app, BrowserWindow, ipcMain } from "electron";
 import path from "path";
-import { ChannelType } from "./channel/base.channel";
+import { ChannelType } from "./share/channel/base.channel";
 import { envConfig } from "./environment";
 import { ChannelDelegate } from "./channel-handler/channel.delegate";
 

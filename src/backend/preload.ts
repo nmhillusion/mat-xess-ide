@@ -1,9 +1,9 @@
 /// <reference path="../frontend/types/window.d.ts" />
 
 import { contextBridge, ipcRenderer } from "electron";
-import { QuerySqlChannel } from "./channel/query-sql.channel";
-import { SelectFileChannel } from "./channel/select-file.channel";
-import { GetStoreValueChannel } from "./channel/get-store-value.channel";
+import { QuerySqlChannel } from "./share/channel/query-sql.channel";
+import { SelectFileChannel } from "./share/channel/select-file.channel";
+import { GetStoreValueChannel } from "./share/channel/get-store-value.channel";
 import { AppStoreKey } from "./store";
 
 contextBridge.exposeInMainWorld("electronAPI", {

@@ -7,7 +7,7 @@ export class GetStoreValueHandler extends ChannelHandler {
 
     const [storeKey] = args;
 
-    const result = this.appStoreInstance.get(String(storeKey));
+    const result = ChannelHandler.appStoreInstance.get(String(storeKey));
 
     console.log(`get store value [${storeKey}] = ${result}`);
 

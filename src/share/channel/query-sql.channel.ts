@@ -1,4 +1,4 @@
-/// <reference path="../../frontend/types/ms-access-result.d.ts" />
+/// <reference path="../types/ms-access-result.d.ts" />
 
 import { BaseChannel, ChannelType } from "./base.channel";
 

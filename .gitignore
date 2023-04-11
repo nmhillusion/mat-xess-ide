@@ -5,3 +5,5 @@ dist/
 out.data.json
 externalLib/*.jar
 temp_repo
+src/backend/share
+src/frontend/common/share
