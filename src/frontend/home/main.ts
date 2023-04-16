@@ -12,6 +12,7 @@ const STATE: {
   spentTime: number;
   executingQuery: boolean;
   resultData?: MsAccessResult;
+  currentSqlQuery?: string;
 } = {
   spentTime: 0,
   executingQuery: false,
@@ -182,6 +183,7 @@ function updateExecutionStatus() {
       const result = await window.electronAPI.querySql(queryValue);
       console.log("result of query is: ", result);
 
+      STATE.currentSqlQuery = queryValue;
       STATE.resultData = result;
       STATE.executingQuery = false;
       STATE.spentTime = new Date().getTime() - startTime.getTime();
@@ -189,5 +191,33 @@ function updateExecutionStatus() {
     };
   }
 
+  __registerForExportExcelQuery();
+
   updateUI();
 })();
+
+function __registerForExportExcelQuery() {
+  const btnExportExcelQuery = document.querySelector(
+    "#btnExportExcel"
+  ) as HTMLButtonElement;
+
+  btnExportExcelQuery.onclick = async (_) => {
+    STATE.executingQuery = true;
+    updateUI();
+    const startTime = new Date();
+
+    const queryValue = STATE.currentSqlQuery;
+
+    if (!queryValue) {
+      throw new Error("query is empty");
+    }
+
+    console.log("will execute on ", queryValue);
+
+    await window.electronAPI.exportExcelQuery(queryValue);
+
+    STATE.executingQuery = false;
+    STATE.spentTime = new Date().getTime() - startTime.getTime();
+    updateUI();
+  };
+}

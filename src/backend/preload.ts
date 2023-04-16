@@ -5,6 +5,7 @@ import { QuerySqlChannel } from "./share/channel/query-sql.channel";
 import { SelectFileChannel } from "./share/channel/select-file.channel";
 import { GetStoreValueChannel } from "./share/channel/get-store-value.channel";
 import { AppStoreKey } from "./store";
+import { ExportExcelQueryChannel } from "./share/channel/export-excel.channel";
 
 contextBridge.exposeInMainWorld("electronAPI", {
   async querySql(sql: string) {
@@ -32,5 +33,13 @@ contextBridge.exposeInMainWorld("electronAPI", {
     getAppStoreChannel.setStoreKey(AppStoreKey.SELECTED_DATABASE);
 
     return await getAppStoreChannel.execute(ipcRenderer);
+  },
+
+  async exportExcelQuery(sql: string): Promise<void> {
+    console.log(`do exportExcelQuery(sql = ${sql})`);
+
+    const channel_ = new ExportExcelQueryChannel();
+    channel_.setQuery(sql);
+    await channel_.execute(ipcRenderer);
   },
 } as ElectronApi);

@@ -5,7 +5,7 @@ export class SelectFileChannel extends BaseChannel<string> {
     super(ChannelType.SELECT_FILE);
   }
 
-  getParams(): any[] {
+  getParams(): unknown[] {
     return [];
   }
 }

@@ -11,7 +11,7 @@ export class GetStoreValueChannel extends BaseChannel<string> {
     this.storeKey = storeKey;
   }
 
-  getParams(): any[] {
+  getParams(): unknown[] {
     return [this.storeKey];
   }
 }

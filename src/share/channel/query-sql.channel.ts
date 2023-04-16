@@ -15,7 +15,7 @@ export class QuerySqlChannel extends BaseChannel<MsAccessResult> {
     }
   }
 
-  getParams(): any[] {
+  getParams(): unknown[] {
     return [this.sql];
   }
 }

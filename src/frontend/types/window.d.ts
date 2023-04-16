@@ -4,6 +4,7 @@ interface ElectronApi {
   querySql(sql: string): Promise<MsAccessResult>;
   selectFile(): Promise<string>;
   getAppStoreValue(key_: string): Promise<string>;
+  exportExcelQuery(sql: string): Promise<void>;
 }
 
 interface Window {
