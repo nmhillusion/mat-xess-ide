@@ -4,8 +4,8 @@ import { doQueryDatabase } from "../service/msaccess-querier.service";
 import { AppStoreKey } from "../store";
 import { ChannelHandler } from "./channel.handler";
 
-export class ExportExcelQueryHandler extends ChannelHandler {
-  async handler(evt: Electron.IpcMainInvokeEvent, ...args: unknown[]) {
+export class ExportExcelQueryHandler extends ChannelHandler<boolean> {
+  async __realEmitEvent(evt: Electron.IpcMainInvokeEvent, ...args: unknown[]) {
     console.log("[handler] `ExportExcelQuery` on: ", args);
 
     const [query_] = args;
@@ -43,5 +43,7 @@ export class ExportExcelQueryHandler extends ChannelHandler {
       message: `Export result to excel file: ${outputFilePath.filePath}`,
       title: "Success",
     });
+
+    return true;
   }
 }

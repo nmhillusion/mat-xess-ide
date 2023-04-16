@@ -50,18 +50,20 @@ function handleChannels(app: Electron.App) {
   const channelDelegate = new ChannelDelegate(app, mainWindow);
 
   ipcMain.handle(ChannelType.GET_STORE_VALUE, (evt, ...args) =>
-    channelDelegate.invoke(ChannelType.GET_STORE_VALUE).handler(evt, ...args)
+    channelDelegate.handle(ChannelType.GET_STORE_VALUE).emitEvent(evt, ...args)
   );
 
   ipcMain.handle(ChannelType.QUERY_SQL, (evt, ...args) =>
-    channelDelegate.invoke(ChannelType.QUERY_SQL).handler(evt, ...args)
+    channelDelegate.handle(ChannelType.QUERY_SQL).emitEvent(evt, ...args)
   );
 
   ipcMain.handle(ChannelType.SELECT_FILE, (evt, ...args) =>
-    channelDelegate.invoke(ChannelType.SELECT_FILE).handler(evt, ...args)
+    channelDelegate.handle(ChannelType.SELECT_FILE).emitEvent(evt, ...args)
   );
 
   ipcMain.handle(ChannelType.EXPORT_EXCEL_QUERY, (evt, ...args) =>
-    channelDelegate.invoke(ChannelType.EXPORT_EXCEL_QUERY).handler(evt, ...args)
+    channelDelegate
+      .handle(ChannelType.EXPORT_EXCEL_QUERY)
+      .emitEvent(evt, ...args)
   );
 }

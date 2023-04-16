@@ -7,7 +7,7 @@ import { SelectFileHandler } from "./select-file.handler";
 import { ExportExcelQueryHandler } from "./export-excel-query.handler";
 
 export class ChannelDelegate {
-  private readonly MAPPING_HANDLER: { [key: string]: ChannelHandler } = {};
+  private readonly MAPPING_HANDLER: { [key: string]: ChannelHandler<any> } = {};
 
   constructor(app: Electron.App, mainWindow: BrowserWindow) {
     this.MAPPING_HANDLER = {
@@ -21,7 +21,7 @@ export class ChannelDelegate {
     };
   }
 
-  invoke(channelType: ChannelType) {
+  handle(channelType: ChannelType) {
     if (this.MAPPING_HANDLER[channelType]) {
       return this.MAPPING_HANDLER[channelType];
     }

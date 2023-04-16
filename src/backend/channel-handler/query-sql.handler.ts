@@ -2,8 +2,8 @@ import { doQueryDatabase } from "../service/msaccess-querier.service";
 import { AppStoreKey } from "../store";
 import { ChannelHandler } from "./channel.handler";
 
-export class QuerySqlHandler extends ChannelHandler {
-  handler(evt: Electron.IpcMainInvokeEvent, ...args: unknown[]) {
+export class QuerySqlHandler extends ChannelHandler<MsAccessResult> {
+  async __realEmitEvent(evt: Electron.IpcMainInvokeEvent, ...args: unknown[]) {
     console.log("[handler] query sql on: ", args);
 
     const [query_] = args;

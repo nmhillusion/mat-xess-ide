@@ -1,8 +1,8 @@
 import { AppStore } from "../store";
 import { envConfig } from "../share/environment/environment";
-import { BrowserWindow } from "electron";
+import { BrowserWindow, dialog } from "electron";
 
-export abstract class ChannelHandler {
+export abstract class ChannelHandler<T> {
   protected static appStoreInstance: AppStore;
   protected static MAX_RECORDS: number;
 
@@ -16,5 +16,16 @@ export abstract class ChannelHandler {
     }
   }
 
-  abstract handler(evt: Electron.IpcMainInvokeEvent, ...args: unknown[]): void;
+  async emitEvent(evt: Electron.IpcMainInvokeEvent, ...args: unknown[]): Promise<T> {
+    try {
+      return await this.__realEmitEvent(evt, ...args);
+    } catch (error) {
+      dialog.showErrorBox("Error when executing", error);
+    }
+  }
+
+  abstract __realEmitEvent(
+    evt: Electron.IpcMainInvokeEvent,
+    ...args: unknown[]
+  ): Promise<T>;
 }

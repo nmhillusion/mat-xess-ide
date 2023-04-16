@@ -1,8 +1,7 @@
 import { ChannelHandler } from "./channel.handler";
 
-export class GetStoreValueHandler extends ChannelHandler {
-
-  handler(evt: Electron.IpcMainInvokeEvent, ...args: unknown[]) {
+export class GetStoreValueHandler extends ChannelHandler<string> {
+  async __realEmitEvent(evt: Electron.IpcMainInvokeEvent, ...args: unknown[]) {
     console.log("[handler] `get store value` on: ", args);
 
     const [storeKey] = args;
