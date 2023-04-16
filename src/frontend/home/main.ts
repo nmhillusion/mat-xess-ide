@@ -193,6 +193,8 @@ function updateExecutionStatus() {
 
   __registerForExportExcelQuery();
 
+  __registerForOpenQueryFile();
+
   updateUI();
 })();
 
@@ -218,6 +220,20 @@ function __registerForExportExcelQuery() {
 
     STATE.executingQuery = false;
     STATE.spentTime = new Date().getTime() - startTime.getTime();
+    updateUI();
+  };
+}
+
+function __registerForOpenQueryFile() {
+  const btnOpenQueryFile = document.querySelector(
+    "#btnOpenQueryFile"
+  ) as HTMLButtonElement;
+
+  btnOpenQueryFile.onclick = async (_) => {
+    const selectedFile = await window.electronAPI.openQueryFile();
+
+    console.log({ selectedFile });
+
     updateUI();
   };
 }

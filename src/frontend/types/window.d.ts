@@ -5,6 +5,7 @@ interface ElectronApi {
   selectFile(): Promise<string>;
   getAppStoreValue(key_: string): Promise<string>;
   exportExcelQuery(sql: string): Promise<void>;
+  openQueryFile(): Promise<string>;
 }
 
 interface Window {

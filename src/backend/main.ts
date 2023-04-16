@@ -68,4 +68,8 @@ function handleChannels(app: Electron.App) {
       .handle(ChannelType.EXPORT_EXCEL_QUERY)
       .emitEvent(evt, ...args)
   );
+
+  ipcMain.handle(ChannelType.OPEN_QUERY_FILE, (evt, ...args) =>
+    channelDelegate.handle(ChannelType.OPEN_QUERY_FILE).emitEvent(evt, ...args)
+  );
 }

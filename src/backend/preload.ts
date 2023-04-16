@@ -6,6 +6,8 @@ import { SelectMsDatabaseFileChannel } from "./share/channel/select-ms-database-
 import { GetStoreValueChannel } from "./share/channel/get-store-value.channel";
 import { AppStoreKey } from "./store";
 import { ExportExcelQueryChannel } from "./share/channel/export-excel.channel";
+import { OpenQueryFileHandler } from "./channel-handler/open-query-file.handler";
+import { OpenQueryFileChannel } from "./share/channel/open-query-file.channel";
 
 contextBridge.exposeInMainWorld("electronAPI", {
   async querySql(sql: string) {
@@ -41,5 +43,11 @@ contextBridge.exposeInMainWorld("electronAPI", {
     const channel_ = new ExportExcelQueryChannel();
     channel_.setQuery(sql);
     await channel_.execute(ipcRenderer);
+  },
+  async openQueryFile(): Promise<string> {
+    console.log(`do openQueryFile()`);
+
+    const channel_ = new OpenQueryFileChannel();
+    return await channel_.execute(ipcRenderer);
   },
 } as ElectronApi);
