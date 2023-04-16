@@ -11,7 +11,10 @@ html(lang="en")
     link(rel="stylesheet", href="./style.scss")
     script(src="../common/environment.ts", type="module")
   body 
-    .banner Mat Xess IDE
+    .flex
+      .banner Mat Xess IDE
+      .button-box 
+        button.btn.btn-primary#btnOpenQueryFile Opens...
 
     .connection-form
       .button-box.flex.align-right

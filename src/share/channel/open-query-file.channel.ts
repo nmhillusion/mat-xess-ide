@@ -1,8 +1,8 @@
 import { BaseChannel, ChannelType } from "./base.channel";
 
-export class SelectFileChannel extends BaseChannel<string> {
+export class SelectMsDatabaseFileChannel extends BaseChannel<string> {
   constructor() {
-    super(ChannelType.SELECT_FILE);
+    super(ChannelType.OPEN_QUERY_FILE);
   }
 
   getParams(): unknown[] {

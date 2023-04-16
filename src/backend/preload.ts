@@ -2,7 +2,7 @@
 
 import { contextBridge, ipcRenderer } from "electron";
 import { QuerySqlChannel } from "./share/channel/query-sql.channel";
-import { SelectFileChannel } from "./share/channel/select-file.channel";
+import { SelectMsDatabaseFileChannel } from "./share/channel/select-ms-database-file.channel";
 import { GetStoreValueChannel } from "./share/channel/get-store-value.channel";
 import { AppStoreKey } from "./store";
 import { ExportExcelQueryChannel } from "./share/channel/export-excel.channel";
@@ -22,7 +22,7 @@ contextBridge.exposeInMainWorld("electronAPI", {
   async selectFile() {
     console.log("do select file");
 
-    const selectFileChannel = new SelectFileChannel();
+    const selectFileChannel = new SelectMsDatabaseFileChannel();
 
     return await selectFileChannel.execute(ipcRenderer);
   },

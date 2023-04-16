@@ -2,7 +2,7 @@ import { dialog } from "electron";
 import { AppStoreKey } from "../store";
 import { ChannelHandler } from "./channel.handler";
 
-export class SelectFileHandler extends ChannelHandler<string[]> {
+export class SelectMsDatabaseFileHandler extends ChannelHandler<string[]> {
   async __realEmitEvent(evt: Electron.IpcMainInvokeEvent, ...args: unknown[]) {
     console.log("[handler] select file");
 

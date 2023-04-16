@@ -57,8 +57,10 @@ function handleChannels(app: Electron.App) {
     channelDelegate.handle(ChannelType.QUERY_SQL).emitEvent(evt, ...args)
   );
 
-  ipcMain.handle(ChannelType.SELECT_FILE, (evt, ...args) =>
-    channelDelegate.handle(ChannelType.SELECT_FILE).emitEvent(evt, ...args)
+  ipcMain.handle(ChannelType.SELECT_MS_DATABASE_FILE, (evt, ...args) =>
+    channelDelegate
+      .handle(ChannelType.SELECT_MS_DATABASE_FILE)
+      .emitEvent(evt, ...args)
   );
 
   ipcMain.handle(ChannelType.EXPORT_EXCEL_QUERY, (evt, ...args) =>
