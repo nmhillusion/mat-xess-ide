@@ -230,9 +230,11 @@ function __registerForOpenQueryFile() {
   ) as HTMLButtonElement;
 
   btnOpenQueryFile.onclick = async (_) => {
-    const selectedFile = await window.electronAPI.openQueryFile();
+    const selectedContentQuery = await window.electronAPI.openQueryFile();
 
-    console.log({ selectedFile });
+    console.log({ selectedContentQuery });
+
+    editor.setValue(selectedContentQuery);
 
     updateUI();
   };

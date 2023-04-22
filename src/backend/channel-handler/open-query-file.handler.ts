@@ -1,8 +1,9 @@
 import { dialog } from "electron";
-import { AppStoreKey } from "../store";
+
+import * as fs from "fs";
 import { ChannelHandler } from "./channel.handler";
 
-export class OpenQueryFileHandler extends ChannelHandler<string[]> {
+export class OpenQueryFileHandler extends ChannelHandler<string> {
   async __realEmitEvent(evt: Electron.IpcMainInvokeEvent, ...args: unknown[]) {
     console.log("[handler] OpenQueryFileHandler");
 
@@ -16,11 +17,13 @@ export class OpenQueryFileHandler extends ChannelHandler<string[]> {
       ],
     });
 
-    ChannelHandler.appStoreInstance.set(
-      AppStoreKey.SELECTED_DATABASE,
-      String(result.filePaths)
-    );
+    if (result.canceled || !result.filePaths) {
+      throw new Error(" Not select a query file ");
+    }
+    console.log("select query file: ", result.filePaths);
 
-    return result.filePaths;
+    const selectedQueryFile = String(result.filePaths);
+
+    return fs.readFileSync(selectedQueryFile).toString();
   }
 }
