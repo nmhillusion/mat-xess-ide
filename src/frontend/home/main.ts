@@ -250,16 +250,16 @@ function updateResultPanel() {
 }
 
 function updateExecutionStatus() {
-  const btnExecQuery = document.querySelector(
-    "#execQuery"
-  ) as HTMLButtonElement;
+  const btnExecBoxQuery = document.querySelector(
+    ".execute-box .button-box"
+  ) as HTMLElement;
   const loadingSpinEl = document.querySelector("#loading") as HTMLElement;
 
   if (STATE.executingQuery) {
-    btnExecQuery.style.display = "none";
+    btnExecBoxQuery.style.display = "none";
     loadingSpinEl.style.display = "block";
   } else {
-    btnExecQuery.style.display = "block";
+    btnExecBoxQuery.style.display = "block";
     loadingSpinEl.style.display = "none";
   }
 }

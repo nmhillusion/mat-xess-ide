@@ -68,7 +68,7 @@
 }
 
 .result-panel {
-  background-color: #eeeeee;
+  background-color: #ffffff;
   padding: 0.5em;
   margin: 0;
   width: 100vw;
@@ -80,42 +80,52 @@
     justify-content: flex-end;
   }
 
-  .real-tab-node {
-    &.selected {
-      background-color: #acd9ff;
-      border: solid 1px #359bed;
+  .result-tab-nodes {
+    border-bottom: solid 1px #359bed;
+
+    .real-tab-node {
+      margin: 0 0.5em;
+
+      &.selected {
+        background-color: #acd9ff;
+        border: solid 1px #359bed;
+      }
     }
   }
 
-  .spend-time {
-    font-family: monospace;
-  }
+  .result-tab-pages {
+    background-color: #eeeeee;
 
-  .sql-query {
-    font-family: monospace;
-    padding: 0.5em;
-    background-color: #ddd;
-  }
-
-  .result-container {
-    padding: 0.5em;
-  }
-
-  table {
-    border-collapse: collapse;
-
-    th,
-    td {
-      border: solid 1px #cccccc;
+    .spend-time {
       font-family: monospace;
-      padding: 0.25em 0.8em;
     }
 
-    #columnNames th {
-      background-color: #cccccc;
+    .sql-query {
+      font-family: monospace;
+      padding: 0.5em;
+      background-color: #ddd;
     }
 
-    #tableData {
+    .result-container {
+      padding: 0.5em;
+    }
+
+    table {
+      border-collapse: collapse;
+
+      th,
+      td {
+        border: solid 1px #cccccc;
+        font-family: monospace;
+        padding: 0.25em 0.8em;
+      }
+
+      #columnNames th {
+        background-color: #cccccc;
+      }
+
+      #tableData {
+      }
     }
   }
 }
