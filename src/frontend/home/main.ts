@@ -98,21 +98,23 @@ function buildForResultTabPanel(
   }
 
   const resultPageEl = cloneNode_ as HTMLElement;
+  resultPageEl.classList.add("real-tab-page");
   resultPageEl.style.display = "block";
+  resultPageEl.removeAttribute("id");
 
   const resultContainer = resultPageEl.querySelector(".result-container");
-  const columnNamesEl = resultContainer?.querySelector("#columnNames");
-  const tableDataEl = resultContainer?.querySelector("#tableData");
+  const columnNamesEl = resultContainer?.querySelector(".columnNames");
+  const tableDataEl = resultContainer?.querySelector(".tableData");
   const spendTimeEl = resultPageEl.querySelector(".spend-time");
+  const sqlQueryEl = resultPageEl.querySelector(".sql-query");
 
-  if (!columnNamesEl || !tableDataEl || !spendTimeEl) {
+  if (!columnNamesEl || !tableDataEl || !spendTimeEl || !sqlQueryEl) {
     throw new Error("Not found result elements");
   }
 
-  clearChildrenEls(columnNamesEl);
-  clearChildrenEls(tableDataEl);
-
   console.log({ queryResult });
+
+  sqlQueryEl.textContent = queryResult.sqlQuery;
 
   for (const columnName of queryResult.columnNames) {
     const columnNameTd = document.createElement("th");
@@ -143,7 +145,15 @@ function updateResultPanel() {
   if (!STATE.resultData || 0 == STATE.resultData?.length) {
     resultPanel.style.display = "none";
   } else {
-    resultPanel.style.display = "block"; /////////////////////////////////
+    const oldElements = resultPanel.querySelectorAll(
+      ".real-tab-node,.real-tab-page"
+    );
+    for (const oldEl_ of oldElements) {
+      oldEl_.remove();
+    }
+
+    resultPanel.style.display = "block";
+
     for (const result_ of STATE.resultData) {
       buildForResultTabPanel(resultPanel, result_);
     }
