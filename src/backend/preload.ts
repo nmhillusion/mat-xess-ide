@@ -10,16 +10,21 @@ import { OpenQueryFileHandler } from "./channel-handler/open-query-file.handler"
 import { OpenQueryFileChannel } from "./share/channel/open-query-file.channel";
 
 contextBridge.exposeInMainWorld("electronAPI", {
-  async querySql(sql: string) {
-    console.log("do query on sql: ", sql);
+  async querySql(_sql: string) {
+    const resultList = [];
+    const subSqlList = _sql.split(";").filter(Boolean);
+    for (const subSql of subSqlList) {
+      console.log("do query on sql: ", subSql);
 
-    const querySqlMessage = new QuerySqlChannel();
-    querySqlMessage.setSql(sql);
+      const querySqlMessage = new QuerySqlChannel();
+      querySqlMessage.setSql(subSql);
 
-    const result = await querySqlMessage.execute(ipcRenderer);
-    console.log("result sql: ", result);
+      const result = await querySqlMessage.execute(ipcRenderer);
+      console.log("result sql: ", result);
 
-    return result;
+      resultList.push(result);
+    }
+    return resultList;
   },
   async selectFile() {
     console.log("do select file");

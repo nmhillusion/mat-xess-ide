@@ -11,7 +11,7 @@ let editor: monaco.editor.IStandaloneCodeEditor;
 const STATE: {
   spentTime: number;
   executingQuery: boolean;
-  resultData?: MsAccessResult;
+  resultData?: MsAccessResult[];
   currentSqlQuery?: string;
 } = {
   spentTime: 0,
@@ -83,49 +83,70 @@ function clearChildrenEls(parentEl: Element) {
   }
 }
 
+function buildForResultTabPanel(
+  resultPanel_: HTMLElement,
+  queryResult: MsAccessResult
+) {
+  const resultTabPagesEl = resultPanel_.querySelector(".result-tab-pages");
+  const tabPageExample = resultTabPagesEl?.querySelector("#tabPageExample");
+
+  const cloneNode_ = tabPageExample?.cloneNode(true);
+  if (cloneNode_) {
+    resultTabPagesEl?.appendChild(cloneNode_);
+  } else {
+    throw new Error("Cannot clone node");
+  }
+
+  const resultPageEl = cloneNode_ as HTMLElement;
+  resultPageEl.style.display = "block";
+
+  const resultContainer = resultPageEl.querySelector(".result-container");
+  const columnNamesEl = resultContainer?.querySelector("#columnNames");
+  const tableDataEl = resultContainer?.querySelector("#tableData");
+  const spendTimeEl = resultPageEl.querySelector(".spend-time");
+
+  if (!columnNamesEl || !tableDataEl || !spendTimeEl) {
+    throw new Error("Not found result elements");
+  }
+
+  clearChildrenEls(columnNamesEl);
+  clearChildrenEls(tableDataEl);
+
+  console.log({ queryResult });
+
+  for (const columnName of queryResult.columnNames) {
+    const columnNameTd = document.createElement("th");
+    columnNameTd.textContent = columnName;
+    columnNamesEl.appendChild(columnNameTd);
+  }
+
+  for (const row_ of queryResult.tableData) {
+    const rowEl = document.createElement("tr");
+    for (const cell_ of row_) {
+      const cellEl = document.createElement("td");
+
+      cellEl.textContent = String(cell_);
+
+      rowEl.appendChild(cellEl);
+    }
+    tableDataEl.appendChild(rowEl);
+  }
+
+  spendTimeEl.textContent = `Executed in ${
+    STATE.spentTime / 1000
+  } seconds. (Only fetch first ${envConfig.processEnv.recordsOnView} records)`;
+}
+
 function updateResultPanel() {
   const resultPanel = document.querySelector(".result-panel") as HTMLDivElement;
 
-  if (!STATE.resultData || 0 == STATE.resultData?.tableData?.length) {
+  if (!STATE.resultData || 0 == STATE.resultData?.length) {
     resultPanel.style.display = "none";
   } else {
-    resultPanel.style.display = "block";
-
-    const resultContainer = resultPanel.querySelector(".result-container");
-    const columnNamesEl = resultContainer?.querySelector("#columnNames");
-    const tableDataEl = resultContainer?.querySelector("#tableData");
-    const spendTimeEl = resultPanel.querySelector(".spend-time");
-
-    if (!columnNamesEl || !tableDataEl || !spendTimeEl) {
-      throw new Error("Not found result elements");
+    resultPanel.style.display = "block"; /////////////////////////////////
+    for (const result_ of STATE.resultData) {
+      buildForResultTabPanel(resultPanel, result_);
     }
-
-    clearChildrenEls(columnNamesEl);
-    clearChildrenEls(tableDataEl);
-
-    for (const columnName of STATE.resultData.columnNames) {
-      const columnNameTd = document.createElement("th");
-      columnNameTd.textContent = columnName;
-      columnNamesEl.appendChild(columnNameTd);
-    }
-
-    for (const row_ of STATE.resultData.tableData) {
-      const rowEl = document.createElement("tr");
-      for (const cell_ of row_) {
-        const cellEl = document.createElement("td");
-
-        cellEl.textContent = String(cell_);
-
-        rowEl.appendChild(cellEl);
-      }
-      tableDataEl.appendChild(rowEl);
-    }
-
-    spendTimeEl.textContent = `Executed in ${
-      STATE.spentTime / 1000
-    } seconds. (Only fetch first ${
-      envConfig.processEnv.recordsOnView
-    } records)`;
   }
 }
 
@@ -183,7 +204,7 @@ function updateExecutionStatus() {
       const result = await window.electronAPI.querySql(queryValue);
       console.log("result of query is: ", result);
 
-      STATE.currentSqlQuery = queryValue;
+      STATE.currentSqlQuery = queryValue[0];
       STATE.resultData = result;
       STATE.executingQuery = false;
       STATE.spentTime = new Date().getTime() - startTime.getTime();

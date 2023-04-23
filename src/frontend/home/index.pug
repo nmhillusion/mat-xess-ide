@@ -34,15 +34,18 @@ html(lang="en")
         .loading-element
 
     .result-panel
-      .button-box 
-        button.btn.btn-success#btnExportExcel Export Excel
-      .spend-time
+      .result-tab-nodes
+      .result-tab-pages
+        .tab-page#tabPageExample(style="display: none;")
+          .button-box 
+            button.btn.btn-success#btnExportExcel Export Excel
+          .spend-time
 
-      .result-container
-        table
-          thead
-            tr#columnNames
-          tbody#tableData
+          .result-container
+            table
+              thead
+                tr#columnNames
+              tbody#tableData
 
     script(src="../../../node_modules/monaco-editor/min/vs/loader.js")
     script(src="./main.ts", type="module")

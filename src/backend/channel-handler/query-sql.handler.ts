@@ -22,6 +22,10 @@ export class QuerySqlHandler extends ChannelHandler<MsAccessResult> {
       wrapperSql
     );
 
+    msAccessResult.sqlQuery = String(query_);
+
+    console.log("[QuerySqlHandler][> Result of SQL: ", msAccessResult);
+
     return msAccessResult;
   }
 }
