@@ -9,12 +9,10 @@ import { envConfig } from "../common/share/environment/environment";
 let editor: monaco.editor.IStandaloneCodeEditor;
 
 const STATE: {
-  spentTime: number;
   executingQuery: boolean;
   resultData?: MsAccessResult[];
   currentSqlQuery?: string;
 } = {
-  spentTime: 0,
   executingQuery: false,
 };
 
@@ -186,7 +184,7 @@ function buildForResultTabPanel(
     }
 
     spendTimeEl.textContent = `Executed in ${
-      STATE.spentTime / 1000
+      queryResult.spentTime / 1000
     } seconds. (Only fetch first ${
       envConfig.processEnv.recordsOnView
     } records)`;
@@ -273,7 +271,6 @@ function updateExecutionStatus() {
       STATE.currentSqlQuery = queryValue[0];
       STATE.resultData = result;
       STATE.executingQuery = false;
-      STATE.spentTime = new Date().getTime() - startTime.getTime();
       updateUI();
     };
   }
@@ -293,8 +290,6 @@ function __registerForExportExcelQuery() {
   btnExportExcelQuery.onclick = async (_) => {
     STATE.executingQuery = true;
     updateUI();
-    const startTime = new Date();
-
     const queryValue = STATE.currentSqlQuery;
 
     if (!queryValue) {
@@ -306,7 +301,6 @@ function __registerForExportExcelQuery() {
     await window.electronAPI.exportExcelQuery(queryValue);
 
     STATE.executingQuery = false;
-    STATE.spentTime = new Date().getTime() - startTime.getTime();
     updateUI();
   };
 }

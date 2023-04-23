@@ -4,6 +4,8 @@ import { ChannelHandler } from "./channel.handler";
 
 export class QuerySqlHandler extends ChannelHandler<MsAccessResult> {
   async __realEmitEvent(evt: Electron.IpcMainInvokeEvent, ...args: unknown[]) {
+    const startTime = new Date();
+
     console.log("[handler] query sql on: ", args);
 
     const [query_] = args;
@@ -23,9 +25,9 @@ export class QuerySqlHandler extends ChannelHandler<MsAccessResult> {
     );
 
     msAccessResult.sqlQuery = String(query_);
+    msAccessResult.spentTime = new Date().getTime() - startTime.getTime();
 
     console.log("[QuerySqlHandler][> Result of SQL: ", msAccessResult);
-
     return msAccessResult;
   }
 }
