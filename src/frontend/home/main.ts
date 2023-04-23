@@ -88,55 +88,109 @@ function buildForResultTabPanel(
   queryResult: MsAccessResult
 ) {
   const resultTabPagesEl = resultPanel_.querySelector(".result-tab-pages");
+  const resultTabNodesEl = resultPanel_.querySelector(".result-tab-nodes");
+  const tabNodeExample = resultTabNodesEl?.querySelector("#tabNodeExample");
   const tabPageExample = resultTabPagesEl?.querySelector("#tabPageExample");
+  let resultPageEl: HTMLElement;
+  let tabNodeEl: HTMLElement;
 
-  const cloneNode_ = tabPageExample?.cloneNode(true);
-  if (cloneNode_) {
-    resultTabPagesEl?.appendChild(cloneNode_);
-  } else {
-    throw new Error("Cannot clone node");
-  }
+  buildTabPage();
+  buildTabNode();
 
-  const resultPageEl = cloneNode_ as HTMLElement;
-  resultPageEl.classList.add("real-tab-page");
-  resultPageEl.style.display = "block";
-  resultPageEl.removeAttribute("id");
-
-  const resultContainer = resultPageEl.querySelector(".result-container");
-  const columnNamesEl = resultContainer?.querySelector(".columnNames");
-  const tableDataEl = resultContainer?.querySelector(".tableData");
-  const spendTimeEl = resultPageEl.querySelector(".spend-time");
-  const sqlQueryEl = resultPageEl.querySelector(".sql-query");
-
-  if (!columnNamesEl || !tableDataEl || !spendTimeEl || !sqlQueryEl) {
-    throw new Error("Not found result elements");
-  }
-
-  console.log({ queryResult });
-
-  sqlQueryEl.textContent = queryResult.sqlQuery;
-
-  for (const columnName of queryResult.columnNames) {
-    const columnNameTd = document.createElement("th");
-    columnNameTd.textContent = columnName;
-    columnNamesEl.appendChild(columnNameTd);
-  }
-
-  for (const row_ of queryResult.tableData) {
-    const rowEl = document.createElement("tr");
-    for (const cell_ of row_) {
-      const cellEl = document.createElement("td");
-
-      cellEl.textContent = String(cell_);
-
-      rowEl.appendChild(cellEl);
+  function buildTabNode() {
+    const cloneTabNode_ = tabNodeExample?.cloneNode(true);
+    if (cloneTabNode_) {
+      resultTabNodesEl?.appendChild(cloneTabNode_);
+    } else {
+      throw new Error("Cannot clone node cloneTabNode_");
     }
-    tableDataEl.appendChild(rowEl);
+
+    tabNodeEl = cloneTabNode_ as HTMLElement;
+    tabNodeEl.classList.add("real-tab-node");
+    tabNodeEl.style.display = "block";
+    tabNodeEl.removeAttribute("id");
+
+    tabNodeEl.textContent = queryResult.sqlQuery
+      .trim()
+      .substring(0, 20)
+      .replace(/\W/g, "_");
+
+    tabNodeEl.onclick = (_) => {
+      {
+        const tabNodeEls = resultTabNodesEl?.querySelectorAll(".real-tab-node");
+        if (tabNodeEls) {
+          for (const el_ of tabNodeEls) {
+            (el_ as HTMLElement).classList.remove("selected");
+          }
+        }
+      }
+      tabNodeEl.classList.add("selected");
+
+      {
+        const tabPageEls = resultTabPagesEl?.querySelectorAll(".real-tab-page");
+        if (tabPageEls) {
+          for (const el_ of tabPageEls) {
+            (el_ as HTMLElement).style.display = "none";
+          }
+        }
+      }
+
+      if (resultPageEl) {
+        resultPageEl.style.display = "block";
+      }
+    };
   }
 
-  spendTimeEl.textContent = `Executed in ${
-    STATE.spentTime / 1000
-  } seconds. (Only fetch first ${envConfig.processEnv.recordsOnView} records)`;
+  function buildTabPage() {
+    const cloneTabPageNode_ = tabPageExample?.cloneNode(true);
+    if (cloneTabPageNode_) {
+      resultTabPagesEl?.appendChild(cloneTabPageNode_);
+    } else {
+      throw new Error("Cannot clone node cloneTabPageNode_");
+    }
+
+    resultPageEl = cloneTabPageNode_ as HTMLElement;
+    resultPageEl.classList.add("real-tab-page");
+    resultPageEl.removeAttribute("id");
+
+    const resultContainer = resultPageEl.querySelector(".result-container");
+    const columnNamesEl = resultContainer?.querySelector(".columnNames");
+    const tableDataEl = resultContainer?.querySelector(".tableData");
+    const spendTimeEl = resultPageEl.querySelector(".spend-time");
+    const sqlQueryEl = resultPageEl.querySelector(".sql-query");
+
+    if (!columnNamesEl || !tableDataEl || !spendTimeEl || !sqlQueryEl) {
+      throw new Error("Not found result elements");
+    }
+
+    console.log({ queryResult });
+
+    sqlQueryEl.textContent = queryResult.sqlQuery;
+
+    for (const columnName of queryResult.columnNames) {
+      const columnNameTd = document.createElement("th");
+      columnNameTd.textContent = columnName;
+      columnNamesEl.appendChild(columnNameTd);
+    }
+
+    for (const row_ of queryResult.tableData) {
+      const rowEl = document.createElement("tr");
+      for (const cell_ of row_) {
+        const cellEl = document.createElement("td");
+
+        cellEl.textContent = String(cell_);
+
+        rowEl.appendChild(cellEl);
+      }
+      tableDataEl.appendChild(rowEl);
+    }
+
+    spendTimeEl.textContent = `Executed in ${
+      STATE.spentTime / 1000
+    } seconds. (Only fetch first ${
+      envConfig.processEnv.recordsOnView
+    } records)`;
+  }
 }
 
 function updateResultPanel() {
@@ -157,6 +211,8 @@ function updateResultPanel() {
     for (const result_ of STATE.resultData) {
       buildForResultTabPanel(resultPanel, result_);
     }
+
+    (resultPanel.querySelector(".real-tab-node") as HTMLButtonElement)?.click();
   }
 }
 

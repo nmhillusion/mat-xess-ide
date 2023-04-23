@@ -80,6 +80,13 @@
     justify-content: flex-end;
   }
 
+  .real-tab-node {
+    &.selected {
+      background-color: #acd9ff;
+      border: solid 1px #359bed;
+    }
+  }
+
   .spend-time {
     font-family: monospace;
   }
