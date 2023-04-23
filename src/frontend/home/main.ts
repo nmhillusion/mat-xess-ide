@@ -35,8 +35,43 @@ function mainController() {
   console.log({ editor });
 }
 
-function getQueryValue() {
+function getQueryAll() {
   return editor?.getValue();
+}
+
+function getQuerySelection() {
+  const selection_ = editor?.getSelection();
+
+  const allLines = getQueryAll()
+    .split("\n")
+    .map((str_) => str_.trim());
+
+  const start_ = selection_?.getStartPosition();
+  const end_ = selection_?.getEndPosition();
+
+  console.log({ start_, end_ });
+
+  const selectedLines: string[] = [];
+  for (let colIdx = 0; colIdx < allLines.length; ++colIdx) {
+    const colNum = colIdx + 1;
+
+    if (colNum == (start_?.lineNumber || 0)) {
+      selectedLines.push(allLines[colIdx].substring(start_?.column || 0));
+    }
+
+    if (
+      colNum > (start_?.lineNumber || 0) ||
+      colNum < (end_?.lineNumber || 0)
+    ) {
+      selectedLines.push(allLines[colIdx]);
+    }
+
+    if (colNum == (end_?.lineNumber || 0)) {
+      selectedLines.push(allLines[colIdx].substring(0, end_?.column || -1));
+    }
+  }
+
+  return selectedLines.join("\n");
 }
 
 async function updateUI() {
@@ -252,28 +287,9 @@ function updateExecutionStatus() {
     };
   }
 
-  {
-    const btnExecQuery = document.querySelector(
-      "#execQuery"
-    ) as HTMLButtonElement;
-    btnExecQuery.onclick = async (_) => {
-      STATE.executingQuery = true;
-      updateUI();
-      const startTime = new Date();
+  __registerForExecuteAllQuery();
 
-      const queryValue = getQueryValue();
-
-      console.log("will execute on ", queryValue);
-
-      const result = await window.electronAPI.querySql(queryValue);
-      console.log("result of query is: ", result);
-
-      STATE.currentSqlQuery = queryValue[0];
-      STATE.resultData = result;
-      STATE.executingQuery = false;
-      updateUI();
-    };
-  }
+  __registerForExecuteSelectionQuery();
 
   __registerForExportExcelQuery();
 
@@ -281,6 +297,27 @@ function updateExecutionStatus() {
 
   updateUI();
 })();
+
+function __registerForExecuteAllQuery() {
+  const btnExecQuery = document.querySelector(
+    "#execQuery"
+  ) as HTMLButtonElement;
+  btnExecQuery.onclick = async (_) => {
+    STATE.executingQuery = true;
+    updateUI();
+    const queryValue = getQueryAll();
+
+    console.log("will execute on ", queryValue);
+
+    const result = await window.electronAPI.querySql(queryValue);
+    console.log("result of query is: ", result);
+
+    STATE.currentSqlQuery = queryValue[0];
+    STATE.resultData = result;
+    STATE.executingQuery = false;
+    updateUI();
+  };
+}
 
 function __registerForExportExcelQuery() {
   const btnExportExcelQuery = document.querySelector(
@@ -317,6 +354,26 @@ function __registerForOpenQueryFile() {
 
     editor.setValue(selectedContentQuery);
 
+    updateUI();
+  };
+}
+function __registerForExecuteSelectionQuery() {
+  const btnExecQuery = document.querySelector(
+    "#execQuerySelection"
+  ) as HTMLButtonElement;
+  btnExecQuery.onclick = async (_) => {
+    STATE.executingQuery = true;
+    updateUI();
+    const queryValue = getQuerySelection();
+
+    console.log("will execute on ", queryValue);
+
+    // const result = await window.electronAPI.querySql(queryValue);
+    // console.log("result of query is: ", result);
+
+    // STATE.currentSqlQuery = queryValue[0];
+    // STATE.resultData = result;
+    STATE.executingQuery = false;
     updateUI();
   };
 }
