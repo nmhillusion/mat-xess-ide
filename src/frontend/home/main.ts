@@ -11,7 +11,6 @@ let editor: monaco.editor.IStandaloneCodeEditor;
 const STATE: {
   executingQuery: boolean;
   resultData?: MsAccessResult[];
-  currentSqlQuery?: string;
 } = {
   executingQuery: false,
 };
@@ -74,10 +73,32 @@ function getQuerySelection() {
   return selectedLines.join("\n");
 }
 
-async function updateUI() {
-  updateConnectionStatus();
-  await updateResultPanel();
-  updateExecutionStatus();
+async function updateUI(
+  onlyUpdateSpecificElements:
+    | {
+        connectionStatus?: boolean;
+        executionStatus?: boolean;
+        resultStatus?: boolean;
+      }
+    | undefined = undefined
+) {
+  if (
+    !onlyUpdateSpecificElements ||
+    onlyUpdateSpecificElements.connectionStatus
+  ) {
+    updateConnectionStatus();
+  }
+
+  if (
+    !onlyUpdateSpecificElements ||
+    onlyUpdateSpecificElements.executionStatus
+  ) {
+    updateExecutionStatus();
+  }
+
+  if (!onlyUpdateSpecificElements || onlyUpdateSpecificElements.resultStatus) {
+    updateResultPanel();
+  }
 }
 
 async function updateConnectionStatus() {
@@ -191,8 +212,16 @@ function buildForResultTabPanel(
     const tableDataEl = resultContainer?.querySelector(".tableData");
     const spendTimeEl = resultPageEl.querySelector(".spend-time");
     const sqlQueryEl = resultPageEl.querySelector(".sql-query");
+    const btnExportExcel: HTMLButtonElement | null =
+      resultPageEl.querySelector(".btnExportExcel");
 
-    if (!columnNamesEl || !tableDataEl || !spendTimeEl || !sqlQueryEl) {
+    if (
+      !columnNamesEl ||
+      !tableDataEl ||
+      !spendTimeEl ||
+      !sqlQueryEl ||
+      !btnExportExcel
+    ) {
       throw new Error("Not found result elements");
     }
 
@@ -223,6 +252,8 @@ function buildForResultTabPanel(
     } seconds. (Only fetch first ${
       envConfig.processEnv.recordsOnView
     } records)`;
+
+    __registerForExportExcelQuery(btnExportExcel, queryResult.sqlQuery);
   }
 }
 
@@ -291,8 +322,6 @@ function updateExecutionStatus() {
 
   __registerForExecuteSelectionQuery();
 
-  __registerForExportExcelQuery();
-
   __registerForOpenQueryFile();
 
   updateUI();
@@ -312,22 +341,22 @@ function __registerForExecuteAllQuery() {
     const result = await window.electronAPI.querySql(queryValue);
     console.log("result of query is: ", result);
 
-    STATE.currentSqlQuery = queryValue[0];
     STATE.resultData = result;
     STATE.executingQuery = false;
     updateUI();
   };
 }
 
-function __registerForExportExcelQuery() {
-  const btnExportExcelQuery = document.querySelector(
-    "#btnExportExcel"
-  ) as HTMLButtonElement;
-
-  btnExportExcelQuery.onclick = async (_) => {
+function __registerForExportExcelQuery(
+  btnExportExcel: HTMLButtonElement,
+  sqlQuery_: string
+) {
+  btnExportExcel.onclick = async (_) => {
     STATE.executingQuery = true;
-    updateUI();
-    const queryValue = STATE.currentSqlQuery;
+    updateUI({
+      executionStatus: true,
+    });
+    const queryValue = sqlQuery_;
 
     if (!queryValue) {
       throw new Error("query is empty");
@@ -338,7 +367,9 @@ function __registerForExportExcelQuery() {
     await window.electronAPI.exportExcelQuery(queryValue);
 
     STATE.executingQuery = false;
-    updateUI();
+    updateUI({
+      executionStatus: true,
+    });
   };
 }
 
