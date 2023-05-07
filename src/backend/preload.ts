@@ -49,7 +49,10 @@ contextBridge.exposeInMainWorld("electronAPI", {
     channel_.setQuery(sql);
     await channel_.execute(ipcRenderer);
   },
-  async openQueryFile(): Promise<string> {
+  async openQueryFile(): Promise<{
+    fileName: string;
+    fileContent: string;
+  }> {
     console.log(`do openQueryFile()`);
 
     const channel_ = new OpenQueryFileChannel();

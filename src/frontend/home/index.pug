@@ -24,7 +24,13 @@ html(lang="en")
         span.status Connected to 
         span#databaseName.databaseName
 
-    #matXessIDE 
+    .ide-container
+      .file-tabs.flex#file-tabs
+        .btn.file-tab.flex#file-tab-example(style="display:none;")
+          .text Tab 1
+          .btn-exit X
+
+      #matXessIDE 
 
     .execute-box
       .button-box.flex 

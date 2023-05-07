@@ -3,7 +3,10 @@ import { dialog } from "electron";
 import * as fs from "fs";
 import { ChannelHandler } from "./channel.handler";
 
-export class OpenQueryFileHandler extends ChannelHandler<string> {
+export class OpenQueryFileHandler extends ChannelHandler<{
+  fileName: string;
+  fileContent: string;
+}> {
   async __realEmitEvent(evt: Electron.IpcMainInvokeEvent, ...args: unknown[]) {
     console.log("[handler] OpenQueryFileHandler");
 
@@ -24,6 +27,9 @@ export class OpenQueryFileHandler extends ChannelHandler<string> {
 
     const selectedQueryFile = String(result.filePaths);
 
-    return fs.readFileSync(selectedQueryFile).toString();
+    return {
+      fileName: selectedQueryFile,
+      fileContent: fs.readFileSync(selectedQueryFile).toString(),
+    };
   }
 }
