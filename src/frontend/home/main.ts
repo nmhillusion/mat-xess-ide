@@ -5,14 +5,20 @@
 /// <reference path="../common/share/environment/environment.model.ts" />
 
 import { envConfig } from "../common/share/environment/environment";
+import { FileTabComponent } from "../components/file-tab.comp";
 
-let editor: monaco.editor.IStandaloneCodeEditor;
-
-const STATE: {
+export interface AppState {
   executingQuery: boolean;
   resultData?: MsAccessResult[];
-} = {
+  fileTabList: FileTabComponent[];
+  currectOpenningFileTab?: string;
+}
+
+let ideEditor: monaco.editor.IStandaloneCodeEditor;
+
+const STATE: AppState = {
   executingQuery: false,
+  fileTabList: [],
 };
 
 function mainController() {
@@ -21,7 +27,7 @@ function mainController() {
     throw new Error("Cannot find matXessIDEEl");
   }
 
-  editor = monaco.editor.create(matXessIdeEl, {
+  ideEditor = monaco.editor.create(matXessIdeEl, {
     value: `
       select *
       from t_user tu
@@ -31,15 +37,15 @@ function mainController() {
     automaticLayout: true,
   });
 
-  console.log({ editor });
+  console.log({ editor: ideEditor });
 }
 
 function getQueryAll() {
-  return editor?.getValue();
+  return ideEditor?.getValue();
 }
 
 function getQuerySelection() {
-  const selection_ = editor?.getSelection();
+  const selection_ = ideEditor?.getSelection();
 
   const allLines = getQueryAll()
     .split("\n")
@@ -383,11 +389,70 @@ function __registerForOpenQueryFile() {
 
     console.log({ fileContent, fileName });
 
-    editor.setValue(fileContent);
+    const createdTab = doDisplayOpenedFileQuery({
+      fileContent,
+      fileName,
+      onClickExitFn: () => {
+        const currentTabIdx = STATE.fileTabList.findIndex(
+          (t_) => t_.fileName === createdTab.fileName
+        );
+
+        if (0 > currentTabIdx) {
+          throw new Error("Cannot find current exit tab");
+        }
+
+        createdTab.element.remove();
+        STATE.fileTabList.splice(currentTabIdx, 1);
+
+        if (fileName === STATE.currectOpenningFileTab) {
+          ideEditor.setValue("");
+        }
+      },
+    });
+    STATE.fileTabList.push(createdTab);
+
+    document
+      .querySelector(".ide-container .file-tabs")
+      ?.appendChild(createdTab.element);
+
+    createdTab.openTab();
 
     updateUI();
   };
 }
+
+function doDisplayOpenedFileQuery({
+  fileContent,
+  fileName,
+  onClickExitFn,
+}: {
+  fileContent: string;
+  fileName: string;
+  onClickExitFn?: () => void;
+}) {
+  const fileTabExampleEl = document.querySelector(
+    ".ide-container .file-tabs .file-tab#file-tab-example"
+  );
+
+  const exampleCloneNode = fileTabExampleEl?.cloneNode(true);
+  if (!exampleCloneNode) {
+    throw new Error("Cannot clone node of file tab example");
+  }
+
+  const clonedFileTabElement_ = exampleCloneNode as HTMLElement;
+  clonedFileTabElement_.removeAttribute("id");
+  clonedFileTabElement_.style.display = "flex";
+
+  return new FileTabComponent({
+    element_: clonedFileTabElement_,
+    fileName_: fileName,
+    fileContent_: fileContent,
+    ideEditor,
+    appState: STATE,
+    onClickExitFn,
+  });
+}
+
 function __registerForExecuteSelectionQuery() {
   const btnExecQuery = document.querySelector(
     "#execQuerySelection"

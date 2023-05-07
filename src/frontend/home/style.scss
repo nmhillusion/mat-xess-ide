@@ -18,6 +18,7 @@
     align-items: center;
     position: relative;
     border-bottom: solid 2px #36f;
+    padding-right: 2.25em;
 
     .btn-exit {
       font-size: 12px;
@@ -26,6 +27,9 @@
       right: 0.3em;
       top: 0.3em;
       font-weight: 500;
+      border-style: none;
+      border-radius: 1em;
+      cursor: pointer;
 
       &:hover {
         font-weight: 900;
