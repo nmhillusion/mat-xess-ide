@@ -14,11 +14,17 @@
 .ide-container {
   .file-tab {
     font-size: 12px;
+    font-family: Arial, Helvetica, sans-serif;
     justify-content: center;
     align-items: center;
     position: relative;
-    border-bottom: solid 2px #36f;
-    padding-right: 2.25em;
+    padding-right: 3em;
+    border-bottom: solid 2px #aaa;
+
+    &.openning {
+      border-bottom: solid 2px rgb(51, 102, 255);
+      background-color: rgba(133, 163, 255, 0.1);
+    }
 
     .btn-exit {
       font-size: 12px;
@@ -30,9 +36,11 @@
       border-style: none;
       border-radius: 1em;
       cursor: pointer;
+      background-color: transparent;
 
       &:hover {
         font-weight: 900;
+        background-color: #eee;
       }
     }
   }
@@ -112,10 +120,12 @@
 
     .real-tab-node {
       margin: 0 0.5em;
+      font-family: "Courier New", Courier, monospace;
+      font-size: 12px;
 
       &.selected {
         background-color: #acd9ff;
-        border: solid 1px #359bed;
+        border-bottom: solid 1px #359bed;
       }
     }
   }

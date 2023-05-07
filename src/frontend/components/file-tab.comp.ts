@@ -15,7 +15,7 @@ export class FileTabComponent {
   constructor(private tabConfig: FileTabConfig) {
     console.log("init for file tab of ", tabConfig.fileName_);
 
-    const textEl = tabConfig.element_.querySelector(".text");
+    const textEl = tabConfig.element_.querySelector(".text") as HTMLElement;
     const btnExit = tabConfig.element_.querySelector(
       ".btn-exit"
     ) as HTMLButtonElement;
@@ -38,7 +38,10 @@ export class FileTabComponent {
       }
     };
 
-    textEl.textContent = tabConfig.fileName_;
+    {
+      textEl.textContent = this.tabName;
+      textEl.title = tabConfig.fileName_;
+    }
 
     tabConfig.element_.onclick = (_) => {
       _.preventDefault();
@@ -48,6 +51,18 @@ export class FileTabComponent {
     };
 
     this.tabConfig.ideEditor.setBanner(tabConfig.element_, 50);
+  }
+
+  private get tabName() {
+    if (this.fileName.includes("/")) {
+      return this.fileName.slice(this.fileName.lastIndexOf("/") + 1);
+    }
+
+    if (this.fileName.includes("\\")) {
+      return this.fileName.slice(this.fileName.lastIndexOf("\\") + 1);
+    }
+
+    return this.fileName;
   }
 
   public get element() {
@@ -61,5 +76,11 @@ export class FileTabComponent {
   openTab() {
     this.tabConfig.ideEditor.setValue(this.tabConfig.fileContent_);
     this.tabConfig.appState.currectOpenningFileTab = this.tabConfig.fileName_;
+
+    this.tabConfig.appState.fileTabList.forEach((t_) =>
+      t_.element.classList.remove("openning")
+    );
+
+    this.element.classList.add("openning");
   }
 }

@@ -35,14 +35,14 @@ html(lang="en")
     .execute-box
       .button-box.flex 
         button.btn.btn-primary#execQuery Execute
-        button.btn.btn-primary#execQuerySelection Execute Selection
+        button.btn.btn-primary#execQuerySelection(style="display: none;") Execute Selection
 
       #loading
         .loading-element
 
     .result-panel
       .result-tab-nodes.flex
-        button.btn.tab-node#tabNodeExample(style="display: none;")
+        .btn.tab-node#tabNodeExample(style="display: none;")
       .result-tab-pages
         .tab-page#tabPageExample(style="display: none;")
           .button-box 
